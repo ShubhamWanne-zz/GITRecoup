@@ -1,0 +1,133 @@
+<form #frm="ngForm" (ngSubmit)="fetchUser(frm)">
+    <div class="row text-center flex-center">
+        <div class="col"></div>
+        <div class="col md-8">
+            <div class="md-form">
+                <input type="text" name="user" class="form-control" mdbInputDirective ngModel>
+                <label for="user">User name</label>
+                <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</form>
+<br />
+<div class="container">
+    <div class="jumbotron" *ngIf="!isInvalidUser && isSubmitClicked">
+        <div class="row">
+            <div class="col sm-4">
+                <h1 class="display-4">{{userName}}</h1>
+                <p class="mb-0" *ngIf="userDetails.bio != null">{{userDetails.bio}}</p>
+            </div>
+            <div class="col sm-4 align-self-start">
+                <img [src]="userDetails.avatar_url" alt="User Image" class="rounded-circle float-right img-fluid z-depth-1" height=120 width=130>
+            </div>
+        </div>
+        <br />
+        <p class="lead"><a [href]="userDetails.html_url" target="_blank">{{URL}}</a></p>
+        <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
+            <mdb-icon icon="heart" class="mr-1"></mdb-icon>
+            followers
+        </button>
+        <hr class="my-4">
+        <p>Public Repositories : {{repository}}</p>
+        <a mdbBtn color="primary" size="lg" target="_blank" [href]="userDetails.html_url" role="button" mdbWavesEffect>
+            Learn more</a>
+        <a mdbBtn color="mdb-color" size="lg" role="button" mdbWavesEffect class="text-white" (click)="fetchRepo()">
+            Show Repositories</a>
+
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="isInvalidUser">
+        <img src="http://imgs.xueui.cn/wp-content/uploads/2016/04/143440K10-1.jpg" class="rounded mx-auto d-block" alt="Responsive Image" />
+    </div>
+</div>
+<div class="container" *ngIf="isShowRepositories">
+    <div class="row">
+        <div class="col-lg-4 col-md-6" *ngFor="let item of repoData; let i=index">
+            <!--Card-->
+            <mdb-card cascade="true" wider="true">
+                <div class="view view-cascade gradient-card-header blue-gradient " *ngIf="i%2==0">
+                    <h2 style="text-align: center; padding-top: 10px" class="card-header-title mb-2 text-white">
+                        <strong>{{item.name}}</strong>
+                    </h2>
+                    <p class="text-white" style="text-align: center">
+                        <i class="fa fa-calendar"></i> {{item.created_at | date:'dd.MM.yyyy'}}
+                    </p>
+                </div>
+                <div class="view view-cascade gradient-card-header peach-gradient " *ngIf="i%2!=0">
+                    <h2 style="text-align: center; padding-top: 10px" class="card-header-title mb-2 text-white">
+                        <strong>{{item.name}}</strong>
+                    </h2>
+                    <p class="text-white" style="text-align: center">
+                        <i class="fa fa-calendar"></i> {{item.created_at | date:'dd.MM.yyyy'}}
+                    </p>
+                </div>
+
+                <mdb-card-body cascade="true" class="text-center">
+
+                    <mdb-card-text style="text-align: left">
+                        <p> <strong> Last Push: </strong> {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
+                        <p> <strong> Fork: </strong> {{item.forks}} </p>
+                        <p> <strong> Issues: </strong> {{item.open_issues}}</p>
+                        <p> <strong> Size: </strong> {{item.size}}</p>
+                    </mdb-card-text>
+
+                    <a [href]="item.html_url" target="_blank" class="blue-text mt-1 d-flex flex-row-reverse">
+                        <h5 class="waves-effect p-1" mdbWavesEffect>Read more
+                            <i class="fa fa-chevron-right"></i>
+                        </h5>
+                    </a>
+
+                </mdb-card-body>
+                <!--/.Card content-->
+
+            </mdb-card>
+            <!--/.Card-->
+            <br /><br />
+        </div>
+    </div>
+</div>
+
+<!--
+    Side Bar (Modal)
+-->
+<div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-full-height modal-notify modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+                    <span aria-hidden="true" class="white-text">×</span>
+                </button>
+                <h5 class="modal-title w-100 white-text" id="myModalLabel">Followers of 
+                    <strong>{{userName}}</strong>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-github-alt fa-4x mb-3 animated rotateIn"></i>
+                </div>
+                <div  *ngIf="userDetails != null && userDetails.followers > 0">
+                    <p class>
+                    <i class="fa fa-heart fa-lg blue-text"></i>
+                    Followers: 
+                    {{userDetails.followers}}
+                </p>
+                </div>
+                <ul class="list-group" *ngIf="userDetails != null && userDetails.followers > 0">
+                    <li *ngFor="let follower of followers" class="list-group-item d-flex justify-content-between align-items-center">
+                        <img [src]="follower.avatar_url" alt="Responsive Image" class="rounded-circle" height=50 width=50>
+                        <a [href]="follower.html_url" target="_blank">
+                        {{follower.login}}
+                        </a>
+                        <span class="badge badge-primary badge-pill">
+                            {{followersDetails.get(follower.login).public_repos}}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
