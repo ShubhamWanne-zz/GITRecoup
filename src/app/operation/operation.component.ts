@@ -12,6 +12,7 @@ export class OperationComponent implements OnInit {
   isSubmitClicked:boolean = false;
   isInvalidUser:boolean = false;
   isShowRepositories:boolean = false;
+  showRepoButtonTag:string = "Show Repositories";
   userName:string;
   URL:string;
   repository:string;
@@ -63,7 +64,8 @@ export class OperationComponent implements OnInit {
   }
  
   fetchRepo = function(){
-      this.isShowRepositories = true;
+      this.isShowRepositories = !this.isShowRepositories;
+      this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
       this.getRepoDetails().then((res)=>{
         this.repoData = res.data;
       },(err)=>{

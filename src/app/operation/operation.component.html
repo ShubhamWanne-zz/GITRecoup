@@ -20,9 +20,14 @@
             <div class="col sm-4">
                 <h1 class="display-4">{{userName}}</h1>
                 <p class="mb-0" *ngIf="userDetails.bio != null">{{userDetails.bio}}</p>
+                <p class="mb-0" *ngIf="userDetails.location != null">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    {{userDetails.location}}
+                </p>
             </div>
-            <div class="col sm-4 align-self-start">
-                <img [src]="userDetails.avatar_url" alt="User Image" class="rounded-circle float-right img-fluid z-depth-1" height=120 width=130>
+            <div class="col sm-4 align-self-center">
+                <img [src]="userDetails.avatar_url" alt="User Image" class="rounded-circle float-right img-fluid z-depth-1"
+                    height=120 width=130>
             </div>
         </div>
         <br />
@@ -34,10 +39,11 @@
         <hr class="my-4">
         <p>Public Repositories : {{repository}}</p>
         <a mdbBtn color="primary" size="lg" target="_blank" [href]="userDetails.html_url" role="button" mdbWavesEffect>
-            Learn more</a>
+            <i class="fa fa-github mr-1" aria-hidden="true"></i>
+            Learn more
+        </a>
         <a mdbBtn color="mdb-color" size="lg" role="button" mdbWavesEffect class="text-white" (click)="fetchRepo()">
-            Show Repositories</a>
-
+            {{showRepoButtonTag}}</a>
     </div>
     <div class="alert alert-danger" role="alert" *ngIf="isInvalidUser">
         <img src="http://imgs.xueui.cn/wp-content/uploads/2016/04/143440K10-1.jpg" class="rounded mx-auto d-block" alt="Responsive Image" />
@@ -68,18 +74,27 @@
                 <mdb-card-body cascade="true" class="text-center">
 
                     <mdb-card-text style="text-align: left">
-                        <p> <strong> Last Push: </strong> {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
-                        <p> <strong> Fork: </strong> {{item.forks}} </p>
-                        <p> <strong> Issues: </strong> {{item.open_issues}}</p>
-                        <p> <strong> Size: </strong> {{item.size}}</p>
+                        <p> <i class="fa fa-wrench" aria-hidden="true"></i><strong> Last Push: </strong> {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
+                        <p> <i class="fa fa-code-fork" aria-hidden="true"></i><strong> Fork: </strong> {{item.forks}} </p>
+                        <p> <i class="fa fa-question-circle-o" aria-hidden="true"></i><strong> Issues: </strong> {{item.open_issues}}</p>
+                        <p> <i class="fa fa-database" aria-hidden="true"></i><strong> Size: </strong> {{item.size}} KB</p>
                     </mdb-card-text>
-
-                    <a [href]="item.html_url" target="_blank" class="blue-text mt-1 d-flex flex-row-reverse">
-                        <h5 class="waves-effect p-1" mdbWavesEffect>Read more
-                            <i class="fa fa-chevron-right"></i>
-                        </h5>
-                    </a>
-
+                    <div class="row">
+                        <div class="col-md-4">
+                                <a mdbBtn color="primary" size="sm" [href]="item.svn_url+'/archive/master.zip'" role="button"
+                                mdbWavesEffect>
+                                <i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i>
+                            </a>    
+                        </div>
+                        <div class="col-md-8 align-self-end">
+                                <a [href]="item.html_url" target="_blank" class="blue-text mt-1 d-flex flex-row-reverse">
+                                        <h6 class="waves-effect p-1" mdbWavesEffect>Read more
+                                            <i class="fa fa-chevron-right"></i>
+                                        </h6>
+                                    </a>
+                
+                        </div>
+                    </div>
                 </mdb-card-body>
                 <!--/.Card content-->
 
@@ -101,7 +116,7 @@
                 <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
                     <span aria-hidden="true" class="white-text">×</span>
                 </button>
-                <h5 class="modal-title w-100 white-text" id="myModalLabel">Followers of 
+                <h5 class="modal-title w-100 white-text" id="myModalLabel">Followers of
                     <strong>{{userName}}</strong>
                 </h5>
             </div>
@@ -109,18 +124,18 @@
                 <div class="text-center">
                     <i class="fa fa-github-alt fa-4x mb-3 animated rotateIn"></i>
                 </div>
-                <div  *ngIf="userDetails != null && userDetails.followers > 0">
+                <div *ngIf="userDetails != null && userDetails.followers > 0">
                     <p class>
-                    <i class="fa fa-heart fa-lg blue-text"></i>
-                    Followers: 
-                    {{userDetails.followers}}
-                </p>
+                        <i class="fa fa-heart fa-lg blue-text"></i>
+                        Followers:
+                        {{userDetails.followers}}
+                    </p>
                 </div>
                 <ul class="list-group" *ngIf="userDetails != null && userDetails.followers > 0">
                     <li *ngFor="let follower of followers" class="list-group-item d-flex justify-content-between align-items-center">
                         <img [src]="follower.avatar_url" alt="Responsive Image" class="rounded-circle" height=50 width=50>
                         <a [href]="follower.html_url" target="_blank">
-                        {{follower.login}}
+                            {{follower.login}}
                         </a>
                         <span class="badge badge-primary badge-pill">
                             {{followersDetails.get(follower.login).public_repos}}
