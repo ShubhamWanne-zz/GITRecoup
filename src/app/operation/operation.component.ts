@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 import { ColorGenerator } from '../../Color';
+import { truncate } from 'fs';
 
 @Component({
   selector: 'app-operation',
@@ -47,7 +48,7 @@ export class OperationComponent implements OnInit {
 
   resetData = function () {
     isSubmitClicked: false;
-    isInvalidUser: false;
+    this.isInvalidUser= false;
     isShowRepositories: false;
     showRepoButtonTag: "Show Repositories";
     isShowChart: false;
@@ -77,12 +78,10 @@ export class OperationComponent implements OnInit {
 
     if (form.value.user != "") {
       this.getUser(form.value.user).then((res) => {
-        if (res.data.name == null) {
-          this.isInvalidUser = true;
+        if(this.isInvalidUser)
           return;
-        }
         this.userDetails = res.data,
-          this.isInvalidUser = false;
+        this.isInvalidUser = false;
         this.isSubmitClicked = true;
         this.userName = res.data.name;
         this.URL = res.data.url;
@@ -136,6 +135,10 @@ export class OperationComponent implements OnInit {
   getUser = async function (user: string) {
     var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
     var api_call = await fetch(rquestURI);
+    if(api_call.status == 404){
+      this.isInvalidUser =  true;
+      return;
+    }
     var data = await api_call.json();
     return { data };
   };

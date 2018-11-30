@@ -35,7 +35,7 @@
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
             <i class="fa fa-heart mr-1" aria-hidden="true"></i> followers
         </button>
-        <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); getChart()">
+        <button mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); getChart()">
             <i class="fa fa-bar-chart mr-1" aria-hidden="true"></i> {{showChartButtonTag}}
         </button>
         <hr class="my-4">
