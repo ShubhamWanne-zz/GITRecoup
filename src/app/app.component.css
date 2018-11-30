@@ -1,0 +1,8 @@
+h1.example {
+    display: inline;
+}  
+@media screen and (max-width: 600px) {
+    h1.example {
+            font-size:10vw;
+    }
+}

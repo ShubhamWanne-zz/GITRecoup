@@ -14,18 +14,18 @@
     </div>
 </form>
 <br />
-<div class="container">
+<div class="container" id="profile">
     <div class="jumbotron" *ngIf="!isInvalidUser && isSubmitClicked">
         <div class="row">
             <div class="col sm-4">
-                <h1 class="display-4">{{userName}}</h1>
+                <h1 class="display-4 adjustText">{{userName}}</h1>
                 <p class="mb-0" *ngIf="userDetails.bio != null">{{userDetails.bio}}</p>
                 <p class="mb-0" *ngIf="userDetails.location != null">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     {{userDetails.location}}
                 </p>
             </div>
-            <div class="col sm-4 align-self-center">
+            <div class="col sm-8 align-self-center">
                 <img [src]="userDetails.avatar_url" alt="User Image" class="rounded-circle float-right img-fluid z-depth-1"
                     height=120 width=130>
             </div>
@@ -33,10 +33,10 @@
         <br />
         <p class="mb-1"><a [href]="userDetails.html_url" target="_blank">{{URL}}</a></p>
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
-                <i class="fa fa-heart mr-1" aria-hidden="true"></i>            followers
+            <i class="fa fa-heart mr-1" aria-hidden="true"></i> followers
         </button>
-        <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="teal" mdbWavesEffect (click)="getChart()">
-                <i class="fa fa-bar-chart mr-1" aria-hidden="true"></i>                {{showChartButtonTag}}
+        <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); getChart()">
+            <i class="fa fa-bar-chart mr-1" aria-hidden="true"></i> {{showChartButtonTag}}
         </button>
         <hr class="my-4">
         <p>Public Repositories : {{repository}}</p>
@@ -45,12 +45,14 @@
             Learn more
         </a>
         <a mdbBtn color="indigo" size="lg" role="button" mdbWavesEffect class="text-white" (click)="fetchRepo()">
-                <i class="fa fa-folder mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}</a>
+            <i class="fa fa-folder mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}</a>
     </div>
     <div class="alert alert-danger" role="alert" *ngIf="isInvalidUser">
         <img src="http://imgs.xueui.cn/wp-content/uploads/2016/04/143440K10-1.jpg" class="rounded mx-auto d-block" alt="Responsive Image" />
     </div>
 </div>
+
+
 <div class="container" *ngIf="isShowRepositories">
     <div class="row">
         <div class="col-lg-4 col-md-6" *ngFor="let item of repoData; let i=index">
@@ -76,6 +78,11 @@
                 <mdb-card-body cascade="true" class="text-center">
 
                     <mdb-card-text style="text-align: left">
+                        <a *ngFor="let star of getStartCount(item.forks, item.open_issues)">
+                            <i class="fa fa-star amber-text" aria-hidden="true"></i>
+                        </a>
+                        <br/>
+                        <br/>
                         <p> <i class="fa fa-calendar-plus-o" aria-hidden="true"></i><strong> Last Push: </strong>
                             {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
                         <p> <i class="fa fa-code-fork" aria-hidden="true"></i><strong> Fork: </strong> {{item.forks}}
@@ -151,21 +158,26 @@
         </div>
     </div>
 </div>
-<div *ngIf="isShowChart" class="container">
-    <div class="jumbotron">
-        <p class="h4">Repository Analysis</p>
-        <hr class="m-4"/>
-            <div style="display: block">
-                    <canvas mdbChart height="50" width="100"
-                        [chartType]="chartType"
-                        [data]="chartData"
-                        [labels]="chartLabels"
-                        [colors]="chartColors"
-                        [options]="chartOptions"
-                        [legend]="true"
-                        (chartHover)="chartHovered($event)"
+<div mdbModal #chartbasicModal="mdbModal" class="modal fade left" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-full-height modal-left" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close pull-left" aria-label="Close" (click)="chartbasicModal.hide()">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title w-100" id="myModalLabel">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                    Repository Analysis</h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: block" *ngIf="isShowChart">
+                    <canvas mdbChart height="200" width="100" [chartType]="chartType" [data]="chartData" [labels]="chartLabels"
+                        [colors]="chartColors" [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
                         (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
+            </div>
+        </div>
     </div>
 </div>

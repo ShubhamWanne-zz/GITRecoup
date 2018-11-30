@@ -178,4 +178,21 @@ export class OperationComponent implements OnInit {
   };
   public chartClicked(e: any): void { }
   public chartHovered(e: any): void { }
+  public getStartCount(numberOfForks, numberOfIssues): any[]{
+    if(numberOfIssues >= numberOfForks || numberOfForks==0){
+      return new Array(1);
+    }
+    if(Math.abs(numberOfForks - numberOfIssues) <= 25){
+      return new Array(2);
+    }
+    else if(Math.abs(numberOfForks - numberOfIssues) <= 50){
+      return new Array(3);      
+    }
+    else if(Math.abs(numberOfForks - numberOfIssues) <= 75){
+      return new Array(4);      
+    }
+    else{
+      return new Array(5);
+    }
+  }
 }

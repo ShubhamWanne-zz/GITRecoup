@@ -5,3 +5,11 @@
     height: 250px;
     overflow-y: auto;
 }
+h1.adjustText{
+    display: inline;
+}
+@media screen and (max-width: 600px){
+    h1.adjustText{
+        font-size:10vw;
+    }
+}
