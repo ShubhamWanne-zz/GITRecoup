@@ -81,8 +81,8 @@
                         <a *ngFor="let star of getStartCount(item.forks, item.open_issues)">
                             <i class="fa fa-star amber-text" aria-hidden="true"></i>
                         </a>
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                         <p> <i class="fa fa-calendar-plus-o" aria-hidden="true"></i><strong> Last Push: </strong>
                             {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
                         <p> <i class="fa fa-code-fork" aria-hidden="true"></i><strong> Fork: </strong> {{item.forks}}

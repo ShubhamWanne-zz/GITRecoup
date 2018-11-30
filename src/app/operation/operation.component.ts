@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
-import {ColorGenerator} from '../../Color';
+import { ColorGenerator } from '../../Color';
 
 @Component({
   selector: 'app-operation',
@@ -31,9 +31,9 @@ export class OperationComponent implements OnInit {
   */
   isChartCreated: boolean = false;
   public chartType: string = 'polarArea';
-  public chartData= new Array();
-  public chartLabels= new Array();
-  public backgroundColor= new Array();
+  public chartData = new Array();
+  public chartLabels = new Array();
+  public backgroundColor = new Array();
   public chartColors: Array<any> = [{
     hoverBorderColor: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)'],
     hoverBorderWidth: 0,
@@ -45,7 +45,7 @@ export class OperationComponent implements OnInit {
   ngOnInit() {
   }
 
-  resetData= function(){
+  resetData = function () {
     isSubmitClicked: false;
     isInvalidUser: false;
     isShowRepositories: false;
@@ -55,13 +55,13 @@ export class OperationComponent implements OnInit {
     showChartButtonTag: "View";
     userName: "";
     URL: "";
-    repository:"";
+    repository: "";
     company: "";
-    userDetails: {};
+    userDetails: { };
     repoData: [];
     followers: [];
-    followersDetails : new Map();
-    colorGenerator : {};
+    followersDetails: new Map();
+    colorGenerator: { };
     this.chartData.length = 0;
     this.chartLabels.length = 0;
     this.backgroundColor.length = 0;
@@ -82,7 +82,7 @@ export class OperationComponent implements OnInit {
           return;
         }
         this.userDetails = res.data,
-        this.isInvalidUser = false;
+          this.isInvalidUser = false;
         this.isSubmitClicked = true;
         this.userName = res.data.name;
         this.URL = res.data.url;
@@ -92,11 +92,11 @@ export class OperationComponent implements OnInit {
         if (this.company == null)
           this.company = "Personal"
 
-          this.getRepoDetails().then((res) => {
-            this.repoData = res.data;
-          }, (err) => {
-            console.error(err);
-          })
+        this.getRepoDetails().then((res) => {
+          this.repoData = res.data;
+        }, (err) => {
+          console.error(err);
+        })
 
       }, (err) => {
         console.error(err);
@@ -124,13 +124,13 @@ export class OperationComponent implements OnInit {
 
     this.isShowRepositories = !this.isShowRepositories;
     this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
-    if(!this.repoData){
-    this.getRepoDetails().then((res) => {
-      this.repoData = res.data;
-    }, (err) => {
-      console.error(err);
-    })
-  }
+    if (!this.repoData) {
+      this.getRepoDetails().then((res) => {
+        this.repoData = res.data;
+      }, (err) => {
+        console.error(err);
+      })
+    }
   }
 
   getUser = async function (user: string) {
@@ -157,41 +157,38 @@ export class OperationComponent implements OnInit {
     this.isShowRepositories = false;
     this.showRepoButtonTag = "Show Repositories";
 
-    this.isShowChart = !this.isShowChart;
-    this.showChartButtonTag = this.isShowChart ? "Hide" : "View";
-
-      console.log("Is Chart Created : "+ this.isChartCreated);
-    if(!this.isChartCreated){
-    for(let repo of this.repoData){
-      this.chartData.push(repo.forks_count);
-      this.chartLabels.push(
-            repo.name
-      );
-      this.backgroundColor.push(this.colorGenerator.materialColor());
+    this.isShowChart = true;
+    if (!this.isChartCreated) {
+      for (let repo of this.repoData) {
+        this.chartData.push(repo.forks_count);
+        this.chartLabels.push(
+          repo.name
+        );
+        this.backgroundColor.push(this.colorGenerator.materialColor());
+      }
+      this.chartColors[0].backgroundColor = this.backgroundColor;
     }
-    this.chartColors[0].backgroundColor = this.backgroundColor;
-  }
-  this.isChartCreated = true;
+    this.isChartCreated = true;
   }
   public chartOptions: any = {
     responsive: true
   };
   public chartClicked(e: any): void { }
   public chartHovered(e: any): void { }
-  public getStartCount(numberOfForks, numberOfIssues): any[]{
-    if(numberOfIssues >= numberOfForks || numberOfForks==0){
+  public getStartCount(numberOfForks, numberOfIssues): any[] {
+    if (numberOfIssues >= numberOfForks || numberOfForks == 0) {
       return new Array(1);
     }
-    if(Math.abs(numberOfForks - numberOfIssues) <= 25){
+    if (Math.abs(numberOfForks - numberOfIssues) <= 25) {
       return new Array(2);
     }
-    else if(Math.abs(numberOfForks - numberOfIssues) <= 50){
-      return new Array(3);      
+    else if (Math.abs(numberOfForks - numberOfIssues) <= 50) {
+      return new Array(3);
     }
-    else if(Math.abs(numberOfForks - numberOfIssues) <= 75){
-      return new Array(4);      
+    else if (Math.abs(numberOfForks - numberOfIssues) <= 75) {
+      return new Array(4);
     }
-    else{
+    else {
       return new Array(5);
     }
   }
