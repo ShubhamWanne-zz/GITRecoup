@@ -39,13 +39,16 @@
             <i class="fa fa-bar-chart mr-1" aria-hidden="true"></i> {{showChartButtonTag}}
         </button>
         <hr class="my-4">
+        <p class="text-info">Profile updated {{getFormattedDate(userDetails.updated_at)}}</p>
         <p>Public Repositories : {{repository}}</p>
         <a mdbBtn color="primary" size="lg" target="_blank" [href]="userDetails.html_url" role="button" mdbWavesEffect>
             <i class="fa fa-github mr-1" aria-hidden="true"></i>
             Learn more
         </a>
         <a mdbBtn color="indigo" size="lg" role="button" mdbWavesEffect class="text-white" (click)="fetchRepo()">
-            <i class="fa fa-folder mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}</a>
+            <i *ngIf="!isShowRepositories" class="fa fa-folder mr-1" aria-hidden="true"></i>
+            <i *ngIf="isShowRepositories" class="fa fa-folder-open mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}
+          </a>
     </div>
     <div class="alert alert-danger" role="alert" *ngIf="isInvalidUser">
         <img src="http://imgs.xueui.cn/wp-content/uploads/2016/04/143440K10-1.jpg" class="rounded mx-auto d-block" alt="Responsive Image" />
@@ -84,7 +87,8 @@
                         <br />
                         <br />
                         <p> <i class="fa fa-calendar-plus-o" aria-hidden="true"></i><strong> Last Push: </strong>
-                            {{item.pushed_at | date: 'dd.MM.yyyy'}} </p>
+                            {{getFormattedDate(item.pushed_at)}}
+                          </p>
                         <p> <i class="fa fa-code-fork" aria-hidden="true"></i><strong> Fork: </strong> {{item.forks}}
                         </p>
                         <p> <i class="fa fa-question-circle-o" aria-hidden="true"></i><strong> Issues: </strong>

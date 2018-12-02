@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 import { ColorGenerator } from '../../Color';
 import { truncate } from 'fs';
+import { DateUtil } from '../utils/Date'
 
 @Component({
   selector: 'app-operation',
@@ -11,6 +12,7 @@ import { truncate } from 'fs';
 export class OperationComponent implements OnInit {
   CLIENT_ID: string = "02105ca1007bab3db720";
   CLIENT_SECRET: string = "933490fc379f175ce0cd89f093c9aca3a5cade37";
+  dateUtil: DateUtil = new DateUtil();
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
   isShowRepositories: boolean = false;
@@ -27,7 +29,7 @@ export class OperationComponent implements OnInit {
   followersDetails = new Map();
   colorGenerator = new ColorGenerator();
 
-  /* 
+  /*
   ---- Chart Details
   */
   isChartCreated: boolean = false;
@@ -92,6 +94,7 @@ export class OperationComponent implements OnInit {
           this.company = "Personal"
 
         this.getRepoDetails().then((res) => {
+          console.log(res.data);
           this.repoData = res.data;
         }, (err) => {
           console.error(err);
@@ -125,6 +128,7 @@ export class OperationComponent implements OnInit {
     this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
     if (!this.repoData) {
       this.getRepoDetails().then((res) => {
+        console.log(res.data);
         this.repoData = res.data;
       }, (err) => {
         console.error(err);
@@ -194,5 +198,8 @@ export class OperationComponent implements OnInit {
     else {
       return new Array(5);
     }
+  }
+  getFormattedDate(dateFrom){
+    return this.dateUtil.getTimeLapsed(new Date(dateFrom));
   }
 }
