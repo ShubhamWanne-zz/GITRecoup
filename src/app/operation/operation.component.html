@@ -3,7 +3,7 @@
         <div class="col"></div>
         <div class="col md-8">
             <div class="md-form">
-                <input type="text" name="user" class="form-control" mdbInputDirective ngModel>
+                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective ngModel>
                 <label for="user">User name</label>
                 <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
                     Search
@@ -18,7 +18,7 @@
     <div class="jumbotron" *ngIf="!isInvalidUser && isSubmitClicked">
         <div class="row">
             <div class="col sm-4">
-                <h1 class="display-4 adjustText">{{userName}}</h1>
+                <h1 class="display-4 adjustText">{{user}}</h1>
                 <p class="mb-0" *ngIf="userDetails.bio != null">{{userDetails.bio}}</p>
                 <p class="mb-0" *ngIf="userDetails.location != null">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -133,7 +133,7 @@
                     <span aria-hidden="true" class="white-text">×</span>
                 </button>
                 <h5 class="modal-title w-100 white-text" id="myModalLabel">Followers of
-                    <strong>{{userName}}</strong>
+                    <strong>{{user}}</strong>
                 </h5>
             </div>
             <div class="modal-body">

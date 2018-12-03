@@ -19,7 +19,7 @@ export class OperationComponent implements OnInit {
   showRepoButtonTag: string = "Show Repositories";
   isShowChart: boolean = false;
   showChartButtonTag: string = "View";
-  userName: string;
+  user: string;
   URL: string;
   repository: string;
   company: string;
@@ -56,7 +56,7 @@ export class OperationComponent implements OnInit {
     isShowChart: false;
     this.isChartCreated = false;
     showChartButtonTag: "View";
-    userName: "";
+    user: "";
     URL: "";
     repository: "";
     company: "";
@@ -85,7 +85,7 @@ export class OperationComponent implements OnInit {
         this.userDetails = res.data,
         this.isInvalidUser = false;
         this.isSubmitClicked = true;
-        this.userName = res.data.name;
+        this.user = res.data.name;
         this.URL = res.data.url;
         this.repository = res.data.public_repos;
         this.company = res.data.company;
@@ -138,6 +138,7 @@ export class OperationComponent implements OnInit {
 
   getUser = async function (user: string) {
     var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
+    console.log(rquestURI);
     var api_call = await fetch(rquestURI);
     if(api_call.status == 404){
       this.isInvalidUser =  true;
@@ -148,7 +149,7 @@ export class OperationComponent implements OnInit {
   };
 
   getRepoDetails = async function () {
-    console.log(`${this.userDetails.repos_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
+//    console.log(`${this.userDetails.repos_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
     var api_call = await fetch(`${this.userDetails.repos_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
     var data = await api_call.json();
     return { data };
