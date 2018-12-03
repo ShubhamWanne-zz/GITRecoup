@@ -31,7 +31,7 @@
             </div>
         </div>
         <br />
-        <p class="mb-1"><a [href]="userDetails.html_url" target="_blank">{{URL}}</a></p>
+        <p class="mb-0 adjustText"><a [href]="userDetails.html_url" target="_blank">{{URL}}</a></p>
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
             <i class="fa fa-heart mr-1" aria-hidden="true"></i> followers
         </button>
