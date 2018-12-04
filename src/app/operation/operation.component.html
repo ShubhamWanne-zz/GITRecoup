@@ -137,7 +137,7 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full-height modal-notify modal-primary" role="document">
-        <div class="modal-content" *ngIf="userDetails != null && userDetails.followers > 0">
+        <div class="modal-content" style="padding-left: 40px" *ngIf="userDetails != null && userDetails.followers > 0">
             <div class="modal-header">
                 <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
                     <span aria-hidden="true" class="white-text">×</span>
@@ -226,7 +226,7 @@
 <div mdbModal #basicRepoModal="mdbModal" class="modal fade left" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full-height modal-left" role="document">
-        <div *ngIf="isShowRepoDetails" class="modal-content">
+        <div *ngIf="isShowRepoDetails" class="modal-content" style="padding: 25px">
             <div class="modal-header">
                 <button type="button" class="close pull-left" aria-label="Close" (click)="basicRepoModal.hide()">
                     <span aria-hidden="true">×</span>
