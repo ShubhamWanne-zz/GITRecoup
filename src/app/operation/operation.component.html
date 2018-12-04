@@ -132,20 +132,20 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full-height modal-notify modal-primary" role="document">
-        <div class="modal-content">
+        <div class="modal-content" *ngIf="userDetails != null && userDetails.followers > 0">
             <div class="modal-header">
                 <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
                     <span aria-hidden="true" class="white-text">×</span>
                 </button>
                 <h5 class="modal-title w-100 white-text" id="myModalLabel">Followers of
-                    <strong>{{user}}</strong>
+                    <strong>{{userDetails.name}}</strong>
                 </h5>
             </div>
             <div class="modal-body">
                 <div class="text-center">
                     <i class="fa fa-github-alt fa-4x mb-3 animated rotateIn"></i>
                 </div>
-                <div *ngIf="userDetails != null && userDetails.followers > 0" class="d-flex p-2 col-example" style="background-color: #4285F4; padding: 10px; color: white">
+                <div class="d-flex p-2 col-example" style="background-color: #4285F4; padding: 10px; color: white">
                     <div class="d-flex w-100 justify-content-between">
                         <h6>
                             <i class="fa fa-heart fa-lg text-white"></i>
