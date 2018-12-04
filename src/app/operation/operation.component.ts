@@ -3,6 +3,7 @@ import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrie
 import { ColorGenerator } from '../../Color';
 import { truncate } from 'fs';
 import { DateUtil } from '../utils/Date'
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-operation',
@@ -16,6 +17,7 @@ export class OperationComponent implements OnInit {
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
   isShowRepositories: boolean = false;
+  isShowRepoDetails = false;
   showRepoButtonTag: string = "Show Repositories";
   isShowChart: boolean = false;
   showChartButtonTag: string = "View";
@@ -26,9 +28,10 @@ export class OperationComponent implements OnInit {
   userDetails: any;
   repoData: any[];
   followers: any[];
+  forksData: any[]= new Array();
   followersDetails = new Map();
   colorGenerator = new ColorGenerator();
-
+  currentRepo:any;
   /*
   ---- Chart Details
   */
@@ -41,7 +44,13 @@ export class OperationComponent implements OnInit {
     hoverBorderColor: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)'],
     hoverBorderWidth: 0,
   }];
+  public chartOptions: any = {
+    responsive: true
+  };
 
+  /*
+  -------- Methods
+  */
   constructor() {
   }
 
@@ -68,6 +77,7 @@ export class OperationComponent implements OnInit {
     this.chartData.length = 0;
     this.chartLabels.length = 0;
     this.backgroundColor.length = 0;
+    this.currentRepo={};
   }
 
   fetchUser = function (form: any) {
@@ -78,14 +88,14 @@ export class OperationComponent implements OnInit {
     this.isShowChart = false;
     this.showChartButtonTag = "View";
 
-    if (form.value.user != "") {
+    if (form.value.user && form.value.user != "") {
       this.getUser(form.value.user).then((res) => {
         if(this.isInvalidUser)
           return;
         this.userDetails = res.data,
         this.isInvalidUser = false;
         this.isSubmitClicked = true;
-        this.user = res.data.name;
+        this.user = res.data.login;
         this.URL = res.data.url;
         this.repository = res.data.public_repos;
         this.company = res.data.company;
@@ -93,8 +103,7 @@ export class OperationComponent implements OnInit {
         if (this.company == null)
           this.company = "Personal"
 
-        this.getRepoDetails().then((res) => {
-          console.log(res.data);
+        this.getRepoDetails(this.userDetails.repos_url).then((res) => {
           this.repoData = res.data;
         }, (err) => {
           console.error(err);
@@ -104,9 +113,10 @@ export class OperationComponent implements OnInit {
         console.error(err);
       })
     }
-  };
+  }
+
   fetchFollowers = function () {
-    this.getFollowers().then((res) => {
+    this.getFollowers(this.userDetails.followers_url).then((res) => {
       this.followers = res.data;
       for (let follower of this.followers) {
         this.getUser(follower.login).then((res) => {
@@ -127,7 +137,7 @@ export class OperationComponent implements OnInit {
     this.isShowRepositories = !this.isShowRepositories;
     this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
     if (!this.repoData) {
-      this.getRepoDetails().then((res) => {
+      this.getRepoDetails(this.userDetails.repos_url).then((res) => {
         console.log(res.data);
         this.repoData = res.data;
       }, (err) => {
@@ -138,7 +148,6 @@ export class OperationComponent implements OnInit {
 
   getUser = async function (user: string) {
     var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
-    console.log(rquestURI);
     var api_call = await fetch(rquestURI);
     if(api_call.status == 404){
       this.isInvalidUser =  true;
@@ -146,17 +155,16 @@ export class OperationComponent implements OnInit {
     }
     var data = await api_call.json();
     return { data };
-  };
+  }
 
-  getRepoDetails = async function () {
-//    console.log(`${this.userDetails.repos_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
-    var api_call = await fetch(`${this.userDetails.repos_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
+  getRepoDetails = async function (repoURL:string) {
+    var api_call = await fetch(`${repoURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
     var data = await api_call.json();
     return { data };
   }
 
-  getFollowers = async function () {
-    var api_call = await fetch(`${this.userDetails.followers_url}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`)
+  getFollowers = async function (followerURL: string) {
+    var api_call = await fetch(`${followerURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`)
     var data = await api_call.json();
     return { data };
   }
@@ -178,11 +186,11 @@ export class OperationComponent implements OnInit {
     }
     this.isChartCreated = true;
   }
-  public chartOptions: any = {
-    responsive: true
-  };
+
   public chartClicked(e: any): void { }
+
   public chartHovered(e: any): void { }
+  
   public getStartCount(numberOfForks, numberOfIssues): any[] {
     if (numberOfIssues >= numberOfForks || numberOfForks == 0) {
       return new Array(1);
@@ -200,7 +208,38 @@ export class OperationComponent implements OnInit {
       return new Array(5);
     }
   }
+  
   getFormattedDate(dateFrom){
     return this.dateUtil.getTimeLapsed(new Date(dateFrom));
   }
+  
+  getCurrentRepo(repo: any){
+    this.forksData.length = 0;
+    this.isShowRepoDetails = true;
+    this.currentRepo = repo;
+    this.getForksList(repo.name).then((res)=>{
+      this.forksData = res.data;
+      for(let item of this.forksData){
+        this.getUser(item.owner.login).then((data)=>{
+          item.userDetails = data;
+          console.log("Details for "+ item.owner.login);
+          console.log(JSON.stringify(item.userDetails))
+        },(err)=>{
+          console.error(err);
+        })
+      }  
+    },(err)=>{
+      console.error(err);
+    })
+  }
+
+  getForksList = async function(repoName: string){
+    const api = `https://api.github.com/repos/${this.userDetails.login}/${repoName}/forks?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
+    var api_call = await fetch(api);
+    if(api_call.status != 404){
+      var data = await api_call.json();
+      return {data};
+    } 
+  }
+
 }
