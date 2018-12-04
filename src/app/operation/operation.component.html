@@ -95,24 +95,29 @@
                         </p>
                         <p> <i class="fa fa-code-fork" aria-hidden="true"></i><strong> Fork: </strong> {{item.forks}}
                         </p>
-                        <p> <i class="fa fa-question-circle-o" aria-hidden="true"></i><strong> Issues: </strong>
+                        <p> <i class="fa fa-bug" aria-hidden="true"></i><strong> Issues: </strong>
                             {{item.open_issues}}</p>
                         <p> <i class="fa fa-database" aria-hidden="true"></i><strong> Size: </strong> {{item.size}} KB</p>
                     </mdb-card-text>
                     <div class="row">
                         <div class="col-md-4">
-                            <a mdbBtn color="primary" size="sm" [href]="item.svn_url+'/archive/master.zip'" role="button"
-                                mdbWavesEffect>
+                            <a mdbBtn mdbTooltip="Download" placement="left" color="primary" size="sm" [href]="item.svn_url+'/archive/master.zip'"
+                                role="button" mdbWavesEffect>
                                 <i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i>
                             </a>
                         </div>
-                        <div class="col-md-8 align-self-end">
-                            <a class="blue-text mt-1 d-flex flex-row-reverse" (click)="basicRepoModal.show(); getCurrentRepo(item)">
-                                <h6 class="waves-effect p-1" mdbWavesEffect>Read more
-                                    <i class="fa fa-chevron-right"></i>
-                                </h6>
+                        <div class="col-md-4">
+                            <a mdbBtn mdbTooltip="View Readme" placement="left" color="primary" size="sm" role="button" (click)="readmeModal.show(); fetchReadme(item)"
+                                mdbWavesEffect>
+                                <i class="fa fa-book fa-2x" aria-hidden="true"></i>
                             </a>
+                        </div>
 
+                        <div class="col-md-4">
+                            <a mdbBtn mdbTooltip="Fork Details" placement="left" color="primary" size="sm" (click)="basicRepoModal.show(); getCurrentRepo(item)"
+                                role="button" mdbWavesEffect>
+                                <i class="fa fa-users fa-2x" aria-hidden="true"></i>
+                            </a>
                         </div>
                     </div>
                 </mdb-card-body>
@@ -218,12 +223,12 @@
     REPO DETAILS PANE
 -->
 
-<div mdbModal #basicRepoModal="mdbModal" class="modal fade bottom" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+<div mdbModal #basicRepoModal="mdbModal" class="modal fade left" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-full-height modal-bottom" role="document">
+    <div class="modal-dialog modal-full-height modal-left" role="document">
         <div *ngIf="isShowRepoDetails" class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close pull-bottom" aria-label="Close" (click)="basicRepoModal.hide()">
+                <button type="button" class="close pull-left" aria-label="Close" (click)="basicRepoModal.hide()">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h4 class="modal-title w-100" id="myModalLabel">Repository name: <strong>{{currentRepo.name}} </strong></h4>
@@ -287,4 +292,43 @@
             </div>
         </div>
     </div>
+</div>
+
+<!--
+    ----- README MODAL
+-->
+
+<div mdbModal #readmeModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-full-height modal-right" role="document">
+    <div class="modal-content">
+      <div class="modal-header peach-gradient">
+        <button type="button" class="close pull-right text-white" aria-label="Close" (click)="readmeModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <div class="d-flex w-100 justify-content-between text-white">
+            <i class="fa fa-book fa-2x text-white" aria-hidden="true"></i>
+            <h4 class="modal-title w-100" id="myModalLabel"> Readme</h4>
+        </div>
+      </div>
+      <div *ngIf="!isReadmeFound && (clickedRepoDetails != undefined)" style="text-align: center; padding-top: 40%">
+            <i class="fa fa-unlink fa-4x red-text" aria-hidden="true"></i>
+            <br/><br/>
+            <h1 class="adjustText text-danger">Readme Not Found !</h1>
+            <br/><br/>
+            <a mdbBtn color="primary" size="sm" target="_blank" [href]="clickedRepoDetails.html_url" role="button" mdbWavesEffect>
+            <i class="fa  fa-external-link fa-2x" aria-hidden="true"></i>
+                Visit GitHub
+            </a>
+            <br/><br/>
+            <p class="lead text-primary">
+                Follow this link to visit original GitHub webpage.
+            </p>
+        </div>
+      <div id="readme"  class="modal-body">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
 </div>

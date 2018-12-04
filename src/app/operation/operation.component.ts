@@ -3,6 +3,7 @@ import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrie
 import { ColorGenerator } from '../../Color';
 import { truncate } from 'fs';
 import { DateUtil } from '../utils/Date'
+import { MarkDown } from '../utils/handleMarkDown'
 import { async } from '@angular/core/testing';
 
 @Component({
@@ -14,10 +15,13 @@ export class OperationComponent implements OnInit {
   CLIENT_ID: string = "02105ca1007bab3db720";
   CLIENT_SECRET: string = "933490fc379f175ce0cd89f093c9aca3a5cade37";
   dateUtil: DateUtil = new DateUtil();
+  markDown: MarkDown = new MarkDown();
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
   isShowRepositories: boolean = false;
   isShowRepoDetails = false;
+  isReadmeFound= false;
+  clickedRepoDetails: any;
   showRepoButtonTag: string = "Show Repositories";
   isShowChart: boolean = false;
   showChartButtonTag: string = "View";
@@ -28,10 +32,12 @@ export class OperationComponent implements OnInit {
   userDetails: any;
   repoData: any[];
   followers: any[];
-  forksData: any[]= new Array();
+  forksData: any[] = new Array();
   followersDetails = new Map();
   colorGenerator = new ColorGenerator();
-  currentRepo:any;
+  currentRepo: any;
+  readmeHtml: string;
+
   /*
   ---- Chart Details
   */
@@ -59,7 +65,7 @@ export class OperationComponent implements OnInit {
 
   resetData = function () {
     isSubmitClicked: false;
-    this.isInvalidUser= false;
+    this.isInvalidUser = false;
     isShowRepositories: false;
     showRepoButtonTag: "Show Repositories";
     isShowChart: false;
@@ -72,12 +78,35 @@ export class OperationComponent implements OnInit {
     userDetails: { };
     repoData: [];
     followers: [];
-    this.followersDetails= new Map();
+    this.followersDetails = new Map();
     colorGenerator: { };
     this.chartData.length = 0;
     this.chartLabels.length = 0;
     this.backgroundColor.length = 0;
-    this.currentRepo={};
+    this.currentRepo = {};
+  }
+
+  fetchReadme = function (repo: any) {
+    this.clickedRepoDetails = repo;
+    this.getReadme(repo.name).then((res) => {
+      var html_data = this.markDown.convertToHTML(res.data);
+      this.readmeHtml = html_data;
+      var div = document.getElementById("readme");
+      div.innerHTML='';
+      if(this.readmeHtml.indexOf('404') >=0 ){
+        this.isReadmeFound = false;
+      }else{
+        this.isReadmeFound = true;
+        div.insertAdjacentHTML('afterbegin', this.readmeHtml);
+      }
+    }, (err) => {
+      console.error(err);
+    })
+  }
+  getReadme = async function (repoName: string){
+    var api_call = await fetch(`https://raw.githubusercontent.com/${this.userDetails.login}/${repoName}/master/README.md`);
+    var data = await api_call.text();
+    return { data };
   }
 
   fetchUser = function (form: any) {
@@ -90,10 +119,10 @@ export class OperationComponent implements OnInit {
 
     if (form.value.user && form.value.user != "") {
       this.getUser(form.value.user).then((res) => {
-        if(this.isInvalidUser)
+        if (this.isInvalidUser)
           return;
         this.userDetails = res.data,
-        this.isInvalidUser = false;
+          this.isInvalidUser = false;
         this.isSubmitClicked = true;
         this.user = res.data.login;
         this.URL = res.data.url;
@@ -122,7 +151,7 @@ export class OperationComponent implements OnInit {
         this.getUser(follower.login).then((res) => {
           this.followersDetails.set(follower.login, res.data);
         }, (err) => {
-          console.log("User not found " + err);
+          console.error("User not found " + err);
         })
       }
     }, (err) => {
@@ -138,7 +167,6 @@ export class OperationComponent implements OnInit {
     this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
     if (!this.repoData) {
       this.getRepoDetails(this.userDetails.repos_url).then((res) => {
-        console.log(res.data);
         this.repoData = res.data;
       }, (err) => {
         console.error(err);
@@ -149,15 +177,15 @@ export class OperationComponent implements OnInit {
   getUser = async function (user: string) {
     var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
     var api_call = await fetch(rquestURI);
-    if(api_call.status == 404){
-      this.isInvalidUser =  true;
+    if (api_call.status == 404) {
+      this.isInvalidUser = true;
       return;
     }
     var data = await api_call.json();
     return { data };
   }
 
-  getRepoDetails = async function (repoURL:string) {
+  getRepoDetails = async function (repoURL: string) {
     var api_call = await fetch(`${repoURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
     var data = await api_call.json();
     return { data };
@@ -190,7 +218,7 @@ export class OperationComponent implements OnInit {
   public chartClicked(e: any): void { }
 
   public chartHovered(e: any): void { }
-  
+
   public getStartCount(numberOfForks, numberOfIssues): any[] {
     if (numberOfIssues >= numberOfForks || numberOfForks == 0) {
       return new Array(1);
@@ -208,38 +236,36 @@ export class OperationComponent implements OnInit {
       return new Array(5);
     }
   }
-  
-  getFormattedDate(dateFrom){
+
+  getFormattedDate(dateFrom) {
     return this.dateUtil.getTimeLapsed(new Date(dateFrom));
   }
-  
-  getCurrentRepo(repo: any){
+
+  getCurrentRepo(repo: any) {
     this.forksData.length = 0;
     this.isShowRepoDetails = true;
     this.currentRepo = repo;
-    this.getForksList(repo.name).then((res)=>{
+    this.getForksList(repo.name).then((res) => {
       this.forksData = res.data;
-      for(let item of this.forksData){
-        this.getUser(item.owner.login).then((data)=>{
+      for (let item of this.forksData) {
+        this.getUser(item.owner.login).then((data) => {
           item.userDetails = data;
-          console.log("Details for "+ item.owner.login);
-          console.log(JSON.stringify(item.userDetails))
-        },(err)=>{
+        }, (err) => {
           console.error(err);
         })
-      }  
-    },(err)=>{
+      }
+    }, (err) => {
       console.error(err);
     })
   }
 
-  getForksList = async function(repoName: string){
+  getForksList = async function (repoName: string) {
     const api = `https://api.github.com/repos/${this.userDetails.login}/${repoName}/forks?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
     var api_call = await fetch(api);
-    if(api_call.status != 404){
+    if (api_call.status != 404) {
       var data = await api_call.json();
-      return {data};
-    } 
+      return { data };
+    }
   }
 
 }
