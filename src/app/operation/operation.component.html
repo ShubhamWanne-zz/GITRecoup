@@ -301,7 +301,7 @@
 <div mdbModal #readmeModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-full-height modal-right" role="document">
-    <div class="modal-content">
+    <div class="modal-content" style="overflow-y: auto;">
       <div class="modal-header peach-gradient">
         <button type="button" class="close pull-right text-white" aria-label="Close" (click)="readmeModal.hide()">
           <span aria-hidden="true">×</span>
@@ -325,9 +325,7 @@
                 Follow this link to visit original GitHub webpage.
             </p>
         </div>
-      <div id="readme"  class="modal-body">
-      </div>
-      <div class="modal-footer">
+      <div id="readme" class="container modal-body">
       </div>
     </div>
   </div>
