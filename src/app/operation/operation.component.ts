@@ -121,7 +121,6 @@ export class OperationComponent implements OnInit {
       for (let follower of this.followers) {
         this.getUser(follower.login).then((res) => {
           this.followersDetails.set(follower.login, res.data);
-          console.log(this.followersDetails);
         }, (err) => {
           console.log("User not found " + err);
         })
