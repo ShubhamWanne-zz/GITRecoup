@@ -5,15 +5,15 @@ import { truncate } from 'fs';
 import { DateUtil } from '../utils/Date'
 import { MarkDown } from '../utils/handleMarkDown'
 import { async } from '@angular/core/testing';
+import { RestDOAService } from '../DOAService/rest-doa.service'
 
 @Component({
   selector: 'app-operation',
   templateUrl: './operation.component.html',
   styleUrls: ['./operation.component.scss']
 })
+
 export class OperationComponent implements OnInit {
-  CLIENT_ID: string = "02105ca1007bab3db720";
-  CLIENT_SECRET: string = "933490fc379f175ce0cd89f093c9aca3a5cade37";
   dateUtil: DateUtil = new DateUtil();
   markDown: MarkDown = new MarkDown();
   isSubmitClicked: boolean = false;
@@ -57,7 +57,7 @@ export class OperationComponent implements OnInit {
   /*
   -------- Methods
   */
-  constructor() {
+  constructor(private doaService: RestDOAService) {
   }
 
   ngOnInit() {
@@ -86,7 +86,7 @@ export class OperationComponent implements OnInit {
 
   fetchReadme = function (repo: any) {
     this.clickedRepoDetails = repo;
-    this.getReadme(repo.name).then((res) => {
+    this.doaService.getReadme(repo.name, this.userDetails.login).then((res) => {
       var html_data = this.markDown.convertToHTML(res.data);
       this.readmeHtml = html_data;
       var div = document.getElementById("readme");
@@ -101,11 +101,6 @@ export class OperationComponent implements OnInit {
       console.error(err);
     })
   }
-  getReadme = async function (repoName: string){
-    var api_call = await fetch(`https://raw.githubusercontent.com/${this.userDetails.login}/${repoName}/master/README.md`);
-    var data = await api_call.text();
-    return { data };
-  }
 
   fetchUser = function (form: any) {
     this.resetData();
@@ -115,11 +110,13 @@ export class OperationComponent implements OnInit {
     this.showChartButtonTag = "View";
 
     if (form.value.user && form.value.user != "") {
-      this.getUser(form.value.user).then((res) => {
-        if (this.isInvalidUser)
+      this.doaService.getUser(form.value.user).then((res) => {
+        if(res.data.DOAServiceStatus == 404){
+          this.isInvalidUser = true;
           return;
+        }
         this.userDetails = res.data,
-          this.isInvalidUser = false;
+        this.isInvalidUser = false;
         this.isSubmitClicked = true;
         this.user = res.data.login;
         this.URL = res.data.url;
@@ -129,7 +126,7 @@ export class OperationComponent implements OnInit {
         if (this.company == null)
           this.company = "Personal"
 
-        this.getRepoDetails(this.userDetails.repos_url).then((res) => {
+          this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
           this.repoData = res.data;
         }, (err) => {
           console.error(err);
@@ -142,10 +139,10 @@ export class OperationComponent implements OnInit {
   }
 
   fetchFollowers = function () {
-    this.getFollowers(this.userDetails.followers_url).then((res) => {
+    this.doaService.getFollowers(this.userDetails.followers_url).then((res) => {
       this.followers = res.data;
       for (let follower of this.followers) {
-        this.getUser(follower.login).then((res) => {
+        this.doaService.getUser(follower.login).then((res) => {
           this.followersDetails.set(follower.login, res.data);
         }, (err) => {
           console.error("User not found " + err);
@@ -163,35 +160,12 @@ export class OperationComponent implements OnInit {
     this.isShowRepositories = !this.isShowRepositories;
     this.showRepoButtonTag = this.isShowRepositories ? "Hide Repositories" : "Show Repositories";
     if (!this.repoData) {
-      this.getRepoDetails(this.userDetails.repos_url).then((res) => {
+      this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
         this.repoData = res.data;
       }, (err) => {
         console.error(err);
       })
     }
-  }
-
-  getUser = async function (user: string) {
-    var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
-    var api_call = await fetch(rquestURI);
-    if (api_call.status == 404) {
-      this.isInvalidUser = true;
-      return;
-    }
-    var data = await api_call.json();
-    return { data };
-  }
-
-  getRepoDetails = async function (repoURL: string) {
-    var api_call = await fetch(`${repoURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
-    var data = await api_call.json();
-    return { data };
-  }
-
-  getFollowers = async function (followerURL: string) {
-    var api_call = await fetch(`${followerURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`)
-    var data = await api_call.json();
-    return { data };
   }
 
   getChart = function () {
@@ -242,10 +216,10 @@ export class OperationComponent implements OnInit {
     this.forksData.length = 0;
     this.isShowRepoDetails = true;
     this.currentRepo = repo;
-    this.getForksList(repo.name).then((res) => {
+    this.doaService.getForksList(repo.name, this.userDetails.login).then((res) => {
       this.forksData = res.data;
       for (let item of this.forksData) {
-        this.getUser(item.owner.login).then((data) => {
+        this.doaService.getUser(item.owner.login).then((data) => {
           item.userDetails = data;
         }, (err) => {
           console.error(err);
@@ -254,15 +228,6 @@ export class OperationComponent implements OnInit {
     }, (err) => {
       console.error(err);
     })
-  }
-
-  getForksList = async function (repoName: string) {
-    const api = `https://api.github.com/repos/${this.userDetails.login}/${repoName}/forks?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
-    var api_call = await fetch(api);
-    if (api_call.status != 404) {
-      var data = await api_call.json();
-      return { data };
-    }
   }
 
 }
