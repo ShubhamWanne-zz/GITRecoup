@@ -3,8 +3,8 @@
         <div class="col"></div>
         <div class="col md-8">
             <div class="md-form">
-                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective ngModel>
                 <label for="user">User name</label>
+                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective ngModel required>
                 <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
                     Search
                 </button>
@@ -137,7 +137,7 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full-height modal-notify modal-primary" role="document">
-        <div class="modal-content" style="padding-left: 40px" *ngIf="userDetails != null && userDetails.followers > 0">
+        <div class="modal-content" *ngIf="userDetails != null && userDetails.followers > 0">
             <div class="modal-header">
                 <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
                     <span aria-hidden="true" class="white-text">×</span>
@@ -237,15 +237,15 @@
                     </div>
             </div>
             <div class="modal-body">
-                <p class="lead"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p class="lead pink-text"><i class="fa fa-info-circle pink-text" aria-hidden="true"></i>
                     {{(currentRepo.description == null || currentRepo.description == "") ?
                     "No description provided." :
                     currentRepo.description
                     }}
                 </p>
-                <p><i class="fa fa-language" aria-hidden="true"></i><strong> Language: </strong>{{currentRepo.language}}</p>
-                <p><i class="fa fa-eye" aria-hidden="true"></i><strong> Watchers: </strong>{{currentRepo.watchers}}</p>
-                <p><i class="fa fa-group" aria-hidden="true"></i><strong> Stargazers: </strong>{{currentRepo.stargazers_count}}</p>
+                <p><i class="fa fa-language blue-text" aria-hidden="true"></i><strong> Language: </strong>{{currentRepo.language}}</p>
+                <p><i class="fa fa-eye teal-text" aria-hidden="true"></i><strong> Watchers: </strong>{{currentRepo.watchers}}</p>
+                <p><i class="fa fa-group light-blue-text" aria-hidden="true"></i><strong> Stargazers: </strong>{{currentRepo.stargazers_count}}</p>
 
 
                 <div class="d-flex p-2 col-example " style="background-color: #4285F4; padding: 10px; color: white">

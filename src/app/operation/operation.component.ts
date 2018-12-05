@@ -64,22 +64,20 @@ export class OperationComponent implements OnInit {
   }
 
   resetData = function () {
-    isSubmitClicked: false;
+    this.isSubmitClicked= false;
     this.isInvalidUser = false;
-    isShowRepositories: false;
-    showRepoButtonTag: "Show Repositories";
-    isShowChart: false;
+    this.isShowRepositories= false;
+    this.showRepoButtonTag= "Show Repositories";
+    this.isShowChart= false;
     this.isChartCreated = false;
-    showChartButtonTag: "View";
-    user: "";
-    URL: "";
-    repository: "";
-    company: "";
-    userDetails: { };
-    repoData: [];
-    followers: [];
+    this.showChartButtonTag= "View";
+    this.URL= "";
+    this.repository= "";
+    this.company= "";
+    this.userDetails= { };
+    this.repoData= [];
+    this.followers= [];
     this.followersDetails = new Map();
-    colorGenerator: { };
     this.chartData.length = 0;
     this.chartLabels.length = 0;
     this.backgroundColor.length = 0;
@@ -110,7 +108,6 @@ export class OperationComponent implements OnInit {
   }
 
   fetchUser = function (form: any) {
-
     this.resetData();
     this.isShowRepositories = false;
     this.showRepoButtonTag = "Show Repositories";
