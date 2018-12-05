@@ -110,7 +110,7 @@ export class OperationComponent implements OnInit {
     this.showChartButtonTag = "View";
 
     if (form.value.user && form.value.user != "") {
-      this.doaService.getUser(form.value.user).then((res) => {
+      this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
         if(res.data.DOAServiceStatus == 404){
           this.isInvalidUser = true;
           return;

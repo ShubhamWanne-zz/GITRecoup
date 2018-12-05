@@ -12,9 +12,6 @@ export class RestDOAService {
   constructor() {
     this.CLIENT_ID = atob(this.CLIENT_ID);
     this.CLIENT_SECRET = atob(this.CLIENT_SECRET);
-
-    console.log("this.CLIENT_ID : "+this.CLIENT_ID);
-    console.log("this.CLIENT_SECRET : "+this.CLIENT_SECRET);
   }
 
   getReadme = async function (repoName: string, username: string){
