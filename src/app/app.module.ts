@@ -5,11 +5,13 @@ import {FormsModule, ReactiveFormsModule } from "@angular/forms"
 
 import { AppComponent } from './app.component';
 import { OperationComponent } from './operation/operation.component';
+import { AdvanceSearchComponent } from './advance-search/advance-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OperationComponent
+    OperationComponent,
+    AdvanceSearchComponent
   ],
   imports: [
     BrowserModule,
