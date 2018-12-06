@@ -1,13 +1,13 @@
 <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo justify-content-between fixed-top mr-auto">
     <mdb-navbar-brand>
         <a class="navbar-brand icons-xlg git-ic" target="_blank" href="https://github.com/ShubhamWanne/GITRecoup">
-            <i class="fa fa-github"></i> GITHUB
+            <i class="fa fa-github px-2"></i> GITRecoup
         </a>
     </mdb-navbar-brand>
     <links>
         <form #frm="ngForm" class="form-inline ml-auto" (ngSubmit)="fetchUsers(frm)">
             <div class="md-form my-0" style="padding-right: 10px">
-                <input class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search"
+                <input size="30" class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search"
                     aria-label="Search" />
             </div>
             <button href="#!" class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>

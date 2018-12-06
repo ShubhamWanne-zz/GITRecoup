@@ -5,6 +5,9 @@
             <div class="md-form">
                 <label for="user">User name</label>
                 <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective ngModel required>
+                <div class="container alert alert-danger" *ngIf="isInvalidUser" style="text-align: center" role="alert">
+                  Entered <strong mdbTooltip="github.com/<Username>" placement="bottom"> username </strong> is not valid !
+                </div>
                 <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
                     Search
                 </button>
@@ -50,8 +53,8 @@
             <i *ngIf="isShowRepositories" class="fa fa-folder-open mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}
         </a>
     </div>
-    <div role="alert" *ngIf="isInvalidUser">
-        <img src="https://cdn-images-1.medium.com/max/1600/1*viqIrYzAw_SbAb8TqShNIA.png" alt="Responsive Image" style="width: 100%; height: auto;" />
+    <div class="container" role="alert" *ngIf="isInvalidUser" style="text-align: center">
+        <img src="../../assets/404_error.png" alt="Responsive Image" style="width: 100%; height: auto;" />
     </div>
 </div>
 

@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestDoaAdvanceService } from "../DOAService/rest-doa-advance.service"
+import { RestDOAService } from "../DOAService/rest-doa.service"
 import { ComponentCommService } from "../CommunicationService/component-comm.service"
 import { Subscription } from 'rxjs'
+import { DateUtil } from '../utils/Date'
 
 @Component({
   selector: 'app-advance-search',
@@ -12,12 +14,18 @@ import { Subscription } from 'rxjs'
 export class AdvanceSearchComponent implements OnInit {
   subscription = new Subscription();
   isAdvanceSearchSelected: boolean = false;
-  userList: any[];
-
-  constructor(private doaService: RestDoaAdvanceService, private messageSevice: ComponentCommService) {
+  userList: any[]= new Array<any>();
+  isInvalidUser: boolean = false;
+  userDetailsMap: Map<string, any>= new Map();
+  dateUtil= new DateUtil();
+  constructor(private advanceDoaService: RestDoaAdvanceService,
+              private messageSevice: ComponentCommService,
+              private doaService: RestDOAService,
+  ) {
     this.subscription = this.messageSevice.getMessage().subscribe(
       message => {
         if (message.to != "advance_search_component") return;
+        this.clearState();
         this.isAdvanceSearchSelected = message.data.isAdvanceSearchSelected;
         this.populateUser(message.data.msg);
       }
@@ -26,18 +34,30 @@ export class AdvanceSearchComponent implements OnInit {
 
   ngOnInit() {
   }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
   populateUser(userName) {
-    console.log(this.isAdvanceSearchSelected);
-    this.doaService.getUsers(userName).then((res) => {
+    this.advanceDoaService.getUsers(userName).then((res) => {
+      if(res.data.total_count == 0){
+        this.isInvalidUser= true;
+        return;
+      }
       this.userList = res.data.items;
-      console.log(this.userList);
+      for(let item of this.userList){
+        this.doaService.getUser(item.login).then((res)=>{
+          this.userDetailsMap.set(item.login, res.data);
+        },(err)=>{
+          this.handlerError(err);
+        })
+      }
     }, (err) => {
-      console.log(err);
+      this.handlerError(err);
     })
   }
+
   getStarCount(score: number){
     if (score <= 25) {
       return new Array(1);
@@ -55,6 +75,21 @@ export class AdvanceSearchComponent implements OnInit {
       return new Array(5);
     }
   }
+
   getUser() {
+  }
+
+  handlerError(err){
+    console.error(err);
+  }
+
+  clearState(){
+    this.isAdvanceSearchSelected = false;
+    this.userList.splice(0);
+    this.userDetailsMap.clear();
+    this.isInvalidUser= false;
+  }
+  formatDate(dateFrom){
+    return this.dateUtil.getTimeLapsed(new Date(dateFrom));
   }
 }
