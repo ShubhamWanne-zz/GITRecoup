@@ -2,16 +2,20 @@
     <div class="row text-center flex-center">
         <div class="col"></div>
         <div class="col md-8">
-            <div class="md-form">
-                <label for="user">User name</label>
-                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective ngModel required>
-                <div class="container alert alert-danger" *ngIf="isInvalidUser" style="text-align: center" role="alert">
-                  Entered <strong mdbTooltip="github.com/<Username>" placement="bottom"> username </strong> is not valid !
+            <div class="md-form input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text md-addon">www.github.com/</span>
                 </div>
-                <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
-                    Search
-                </button>
+                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective [mdbValidate]="false" ngModel required>
             </div>
+
+            <div class="container alert alert-danger" *ngIf="isInvalidUser" style="text-align: center" role="alert">
+                Entered <strong mdbTooltip="github.com/<Username>" placement="bottom"> username </strong> is not
+                valid !
+            </div>
+            <button mdbBtn type="submit" gradient="peach" size="lg" mdbWavesEffect>
+                Search
+            </button>
         </div>
         <div class="col"></div>
     </div>
@@ -21,12 +25,24 @@
     <div class="jumbotron" *ngIf="!isInvalidUser && isSubmitClicked">
         <div class="row">
             <div class="col sm-4">
-                <h1 class="display-4 adjustText">{{userDetails.name}}</h1>
-                <p class="mb-0" *ngIf="userDetails.bio != null">{{userDetails.bio}}</p>
-                <p class="mb-0" *ngIf="userDetails.location != null">
+                <h1 class="display-4 adjustText">{{userDetails.name == null ? "Anonymous user" : userDetails.name}}</h1>
+                <p class="mb-0 deep-blue-grey-text">
+                        <i class="fa fa-quote-left px-1 blue-grey-text" aria-hidden="true"></i>
+                        <strong>
+                            {{userDetails.bio == null ? "Github Enthusiasts" : userDetails.bio}}
+                        </strong>
+                        <i class="fa fa-quote-right px-2 blue-grey-text" aria-hidden="true"></i>
+                    </p>
+                <p class="mb-0" style="padding: 10px 0px 10px 0px">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    {{userDetails.location}}
+                    {{ userDetails.location == null ? "Earth" : userDetails.location }}
                 </p>
+                <ul class="list-unstyled list-inline font-small">
+                    <li class="list-inline-item pr-2 teal-text"><i class="fa fa-clock-o pr-1"></i>{{getFormattedDate(userDetails.updated_at)}}</li>
+                    <li class="list-inline-item pr-2 pink-text"><i class="fa fa-heart pr-1"></i>{{userDetails.followers}}</li>
+                    <li class="list-inline-item pr-2 blue-text"><i class="fa fa-user-plus pr-1"></i>{{userDetails.following}}21</li>
+                    <li class="list-inline-item pr-2 brown-text"><i class="fa fa-code pr-1"></i>{{userDetails.public_repos}}</li>
+                </ul>
             </div>
             <div class="col sm-8 align-self-center">
                 <img [src]="userDetails.avatar_url" alt="User Image" class="rounded-circle float-right img-fluid z-depth-1"
@@ -34,7 +50,12 @@
             </div>
         </div>
         <br />
-        <p class="mb-0 adjustText"><a [href]="userDetails.html_url" target="_blank">{{URL}}</a></p>
+        <p class="mb-0 adjustText" style="padding: 10px">
+            <i class="fa fa-external-link blue-text" aria-hidden="true"></i>
+            <a [href]="userDetails.html_url" target="_blank">
+                {{userDetails.html_url}}
+            </a>
+        </p>
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
             <i class="fa fa-heart mr-1" aria-hidden="true"></i> followers
         </button>
@@ -52,9 +73,6 @@
             <i *ngIf="!isShowRepositories" class="fa fa-folder mr-1" aria-hidden="true"></i>
             <i *ngIf="isShowRepositories" class="fa fa-folder-open mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}
         </a>
-    </div>
-    <div class="container" role="alert" *ngIf="isInvalidUser" style="text-align: center">
-        <img src="https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/404_error.png?raw=true" alt="Responsive Image" style="width: 100%; height: auto;" />
     </div>
 </div>
 
@@ -109,8 +127,8 @@
                             </a>
                         </div>
                         <div class="col-md-4">
-                            <a mdbBtn mdbTooltip="View Readme" placement="left" color="primary" size="sm" role="button" (click)="readmeModal.show(); fetchReadme(item)"
-                                mdbWavesEffect>
+                            <a mdbBtn mdbTooltip="View Readme" placement="left" color="primary" size="sm" role="button"
+                                (click)="readmeModal.show(); fetchReadme(item)" mdbWavesEffect>
                                 <i class="fa fa-book fa-2x" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -234,9 +252,10 @@
                     <span aria-hidden="true">×</span>
                 </button>
                 <div class="d-flex w-100 justify-content-between">
-                        <i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i>
-                        <h4 class="modal-title w-100" id="myModalLabel"><strong style="padding-left: 5px"> {{currentRepo.name}} </strong></h4>
-                    </div>
+                    <i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i>
+                    <h4 class="modal-title w-100" id="myModalLabel"><strong style="padding-left: 5px">
+                            {{currentRepo.name}} </strong></h4>
+                </div>
             </div>
             <div class="modal-body">
                 <p class="lead pink-text"><i class="fa fa-info-circle pink-text" aria-hidden="true"></i>
@@ -304,34 +323,35 @@
 -->
 
 <div mdbModal #readmeModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-full-height modal-right" role="document">
-    <div class="modal-content" style="overflow-y: auto;">
-      <div class="modal-header peach-gradient">
-        <button type="button" class="close pull-right text-white" aria-label="Close" (click)="readmeModal.hide()">
-          <span aria-hidden="true">×</span>
-        </button>
-        <div class="d-flex w-100 justify-content-between text-white">
-            <i class="fa fa-book fa-2x text-white" aria-hidden="true"></i>
-            <h4 class="modal-title w-100" id="myModalLabel"> Readme</h4>
+    aria-hidden="true">
+    <div class="modal-dialog modal-full-height modal-right" role="document">
+        <div class="modal-content" style="overflow-y: auto;">
+            <div class="modal-header peach-gradient">
+                <button type="button" class="close pull-right text-white" aria-label="Close" (click)="readmeModal.hide()">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <div class="d-flex w-100 justify-content-between text-white">
+                    <i class="fa fa-book fa-2x text-white" aria-hidden="true"></i>
+                    <h4 class="modal-title w-100" id="myModalLabel"> Readme</h4>
+                </div>
+            </div>
+            <div *ngIf="!isReadmeFound && (clickedRepoDetails != undefined)" style="text-align: center; padding-top: 40%">
+                <i class="fa fa-unlink fa-4x red-text" aria-hidden="true"></i>
+                <br /><br />
+                <h1 class="adjustText text-danger">Readme Not Found !</h1>
+                <br /><br />
+                <a mdbBtn color="primary" size="sm" target="_blank" [href]="clickedRepoDetails.html_url" role="button"
+                    mdbWavesEffect>
+                    <i class="fa  fa-external-link fa-2x" aria-hidden="true"></i>
+                    Visit GitHub
+                </a>
+                <br /><br />
+                <p class="lead text-primary">
+                    Follow this link to visit original GitHub webpage.
+                </p>
+            </div>
+            <div id="readme" style="padding-left: 40px" class="container modal-body">
+            </div>
         </div>
-      </div>
-      <div *ngIf="!isReadmeFound && (clickedRepoDetails != undefined)" style="text-align: center; padding-top: 40%">
-            <i class="fa fa-unlink fa-4x red-text" aria-hidden="true"></i>
-            <br/><br/>
-            <h1 class="adjustText text-danger">Readme Not Found !</h1>
-            <br/><br/>
-            <a mdbBtn color="primary" size="sm" target="_blank" [href]="clickedRepoDetails.html_url" role="button" mdbWavesEffect>
-            <i class="fa  fa-external-link fa-2x" aria-hidden="true"></i>
-                Visit GitHub
-            </a>
-            <br/><br/>
-            <p class="lead text-primary">
-                Follow this link to visit original GitHub webpage.
-            </p>
-        </div>
-      <div id="readme" style="padding-left: 40px" class="container modal-body">
-      </div>
     </div>
-  </div>
 </div>
