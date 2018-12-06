@@ -63,7 +63,6 @@ export class OperationComponent implements OnInit {
   -------- Methods
   */
   constructor(private doaService: RestDOAService, private messageService: ComponentCommService) {
-    console.log("Inside constructor")
       this.subscription = this.messageService.getMessage().subscribe((message)=>{
         if(message.to != "operation_component") return;
       });
@@ -71,11 +70,8 @@ export class OperationComponent implements OnInit {
 
   ngOnInit() {
     this.subscription = new Subscription();
-    console.log("Created");
   }
   ngOnDestroy(): void {
-    console.log("Destroyed");
-    this.subscription.unsubscribe();
   }
 
   resetData = function () {

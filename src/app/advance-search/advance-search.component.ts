@@ -15,9 +15,12 @@ export class AdvanceSearchComponent implements OnInit {
   subscription = new Subscription();
   isAdvanceSearchSelected: boolean = false;
   userList: any[]= new Array<any>();
+  userName: string;
   isInvalidUser: boolean = false;
   userDetailsMap: Map<string, any>= new Map();
   dateUtil= new DateUtil();
+  total_result: number;
+  result_incrementor: number=1;
   constructor(private advanceDoaService: RestDoaAdvanceService,
               private messageSevice: ComponentCommService,
               private doaService: RestDOAService,
@@ -40,12 +43,18 @@ export class AdvanceSearchComponent implements OnInit {
   }
 
   populateUser(userName) {
-    this.advanceDoaService.getUsers(userName).then((res) => {
+    this.advanceDoaService.getUsers(userName, this.result_incrementor).then((res) => {
       if(res.data.total_count == 0){
         this.isInvalidUser= true;
         return;
       }
-      this.userList = res.data.items;
+      if(this.result_incrementor == 1){
+        this.userName = userName;
+        this.userList = res.data.items;
+        this.total_result = res.data.total_count;  
+      }else{
+        this.userList = this.userList.concat(res.data.items);
+      }
       for(let item of this.userList){
         this.doaService.getUser(item.login).then((res)=>{
           this.userDetailsMap.set(item.login, res.data);
@@ -53,6 +62,8 @@ export class AdvanceSearchComponent implements OnInit {
           this.handlerError(err);
         })
       }
+      console.log(this.userList.length);
+      console.log(this.result_incrementor);
     }, (err) => {
       this.handlerError(err);
     })
@@ -107,5 +118,13 @@ export class AdvanceSearchComponent implements OnInit {
       },
       from: "advance_search_component"
     });
+  }
+
+  viewMore(){
+    if(this.result_incrementor <= Math.ceil(this.total_result/30)){
+      console.log(this.result_incrementor);
+      this.result_incrementor++;
+      this.populateUser(this.userName);
+    }
   }
 }

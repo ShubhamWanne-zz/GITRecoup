@@ -21,7 +21,7 @@ export class RestDOAService {
   }
 
   getUser = async function (user: string) {
-    var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
+    var rquestURI = `https://api.github.com/users/${user}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}&per_page=1000`;
     var api_call = await fetch(rquestURI);
     let data: any= {
       DOAServiceStatus: ""
@@ -35,19 +35,19 @@ export class RestDOAService {
   }
 
   getRepoDetails = async function (repoURL: string) {
-    var api_call = await fetch(`${repoURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`);
+    var api_call = await fetch(`${repoURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}&per_page=1000`);
     var data = await api_call.json();
     return { data };
   }
 
   getFollowers = async function (followerURL: string) {
-    var api_call = await fetch(`${followerURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`)
+    var api_call = await fetch(`${followerURL}?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}&per_page=1000`)
     var data = await api_call.json();
     return { data };
   }
 
   getForksList = async function (repoName: string, username: string) {
-    const api = `https://api.github.com/repos/${username}/${repoName}/forks?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}`;
+    const api = `https://api.github.com/repos/${username}/${repoName}/forks?client_id=${this.CLIENT_ID}&client_secret=${this.CLIENT_SECRET}&per_page=1000`;
     var api_call = await fetch(api);
     if (api_call.status != 404) {
       var data = await api_call.json();

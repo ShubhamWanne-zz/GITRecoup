@@ -7,7 +7,7 @@
             <i *ngIf="userList.length != 0" class="fa fa-check-circle teal-text" aria-hidden="true"></i>
             About
             <strong *ngIf="userList.length != 0">
-                {{userList.length}}
+                {{total_result}}
             </strong>
             <i *ngIf="userList.length == 0" class="fa fa-refresh fa-spin"></i>
             results.
@@ -57,5 +57,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="userList.length != 0 && (userList.length < total_result)" class="container" style="padding: 50px; align-content: center">
+        <button mdbBtn type="button" gradient="peach" block="true" mdbWavesEffect (click)="viewMore()">See more</button>
     </div>
 </div>

@@ -7,9 +7,8 @@ export class RestDoaAdvanceService {
 
   constructor() { }
 
-  getUsers = async function(userName: string) {
-    var api_call = await fetch(`https://api.github.com/search/users?q=${userName}`);
-    console.log(api_call);
+  getUsers = async function(userName: string, page: number) {
+    var api_call = await fetch(`https://api.github.com/search/users?q=${userName}&page=${page}`);
     var data = await api_call.json();
     return {data};
   }
