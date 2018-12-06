@@ -10,12 +10,12 @@
                 <input size="30" class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search"
                     aria-label="Search" />
             </div>
-            <button href="#!" class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>
+            <button class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>
         </form>
     </links>
 </mdb-navbar>
 <br /><br />
-<div *ngIf="isAdvanceSearchSelected" class="alert alert-primary alert-dismissible fade show" role="alert">
+<div *ngIf="isAdvanceSearchSelected" class="alert alert-primary alert-dismissible fade show" role="alert" style="position: fixed; width: 100%; z-index: 99;">
         <strong>To close search panel</strong> dismiss this alert.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="fetchUsers({})">
             <span aria-hidden="true">&times;</span>

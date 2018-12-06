@@ -42,6 +42,7 @@ export class AppComponent {
         },
         from: "app_component"
       })
+      this.userName = "";
     }else{
       this.isAdvanceSearchSelected= false;
       this.messageService.sendMessage({
