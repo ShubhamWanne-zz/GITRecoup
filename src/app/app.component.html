@@ -14,7 +14,14 @@
         </form>
     </links>
 </mdb-navbar>
-<br /><br /><br /><br /><br /><br />
+<br /><br />
+<div *ngIf="isAdvanceSearchSelected" class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>To close search panel</strong> dismiss this alert.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="fetchUsers({})">
+            <span aria-hidden="true">&times;</span>
+        </button>
+</div>    
+<br /><br /><br />
 <div class="d-flex justify-content-end" style="padding-right: 20px;">
     <button class="btn purple-gradient btn-circle btn-xl sticky" style="position: fixed; z-index: 99; bottom: 20px"
         (click)="goToTop()">

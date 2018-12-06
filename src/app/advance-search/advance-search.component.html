@@ -2,46 +2,57 @@
     <img src="../../assets/404_error.png" alt="Responsive Image" style="width: 100%; height: auto;" />
 </div>
 <div class="container" *ngIf="isAdvanceSearchSelected">
-      <div class="d-flex w-100 justify-content-between">
+    <div class="d-flex w-100 justify-content-between" *ngIf="!isInvalidUser">
         <p class="lead">
-          <i class="fa fa-check-circle" aria-hidden="true"></i>
-          About {{userList.length}} results.
+            <i *ngIf="userList.length != 0" class="fa fa-check-circle teal-text" aria-hidden="true"></i>
+            About
+            <strong *ngIf="userList.length != 0">
+                {{userList.length}}
+            </strong>
+            <i *ngIf="userList.length == 0" class="fa fa-refresh fa-spin"></i>
+            results.
         </p>
-      </div>
+    </div>
     <div class="row">
         <div class="col col-md-4" *ngFor="let item of userList; let i=index">
             <div class="card card-image mb-3" [style.background-image]=" (i%2==0) ? 'url(\'../../assets/background.png\')' : 'url(\'../../assets/background.png\')'">
                 <div class="text-white text-center d-flex align-items-center rgba-black-strong py-4 px-5">
                     <div>
-                        <img [src]="item.avatar_url" alt="User Image" class="rounded-circle img-fluid z-depth-1" height=75 width=75>
-                        <br/><br/>
+                        <img [src]="item.avatar_url" alt="User Image" class="rounded-circle img-fluid z-depth-1" height=75
+                            width=75>
+                        <br /><br />
                         <a *ngFor="let star of getStarCount(item.score)">
                             <i class="fa fa-star amber-text" aria-hidden="true"></i>
                         </a>
                         <h5 class="pink-text py-2"><i class="fa fa-user-circle-o px-2"></i>{{item.login}}</h5>
                         <h5 class="card-title pt-2">
-                          <i class="fa fa-quote-left px-1" aria-hidden="true"></i>
+                            <i class="fa fa-quote-left px-1" aria-hidden="true"></i>
                             <strong>
-                              {{userDetailsMap.get(item.login).bio == null ? "GitHub enthusiast" : userDetailsMap.get(item.login).bio}}
+                                {{userDetailsMap.get(item.login).bio == null ? "GitHub enthusiast" :
+                                userDetailsMap.get(item.login).bio}}
                             </strong>
-                          <i class="fa fa-quote-right px-2" aria-hidden="true"></i>
+                            <i class="fa fa-quote-right px-2" aria-hidden="true"></i>
                         </h5>
                         <p>
-                          <i class="fa fa-map-marker px-2" aria-hidden="true"></i>
-                          {{userDetailsMap.get(item.login).location == null ? "Earth" : userDetailsMap.get(item.login).location}}
+                            <i class="fa fa-map-marker px-2" aria-hidden="true"></i>
+                            {{userDetailsMap.get(item.login).location == null ? "Earth" :
+                            userDetailsMap.get(item.login).location}}
                         </p>
                         <p>
-                          <i class="fa fa-briefcase px-2" aria-hidden="true"></i>
-                          {{userDetailsMap.get(item.login).company == null ? "Self-Employed" : userDetailsMap.get(item.login).company}}
+                            <i class="fa fa-briefcase px-2" aria-hidden="true"></i>
+                            {{userDetailsMap.get(item.login).company == null ? "Self-Employed" :
+                            userDetailsMap.get(item.login).company}}
                         </p>
-                            <ul class="list-unstyled list-inline font-small">
-                              <li class="list-inline-item pr-2 white-text"><i class="fa fa-clock-o pr-1"></i>{{formatDate(userDetailsMap.get(item.login).updated_at )}}</li>
-                              <li class="list-inline-item pr-2"><a href="#" class="white-text"><i class="fa fa-heart pr-1"></i>{{userDetailsMap.get(item.login).followers}}</a></li>
-                              <li class="list-inline-item pr-2"><a href="#" class="white-text"><i class="fa fa-user-plus pr-1"></i>{{userDetailsMap.get(item.login).following}}21</a></li>
-                              <li class="list-inline-item"><a href="#" class="white-text"><i class="fa fa-code pr-1"></i>{{userDetailsMap.get(item.login).public_repos}}</a></li>
-                            </ul>
-                          <a [href]="item.html_url" target="_blank" mdbBtn color="pink" class="waves-light" mdbWavesEffect><i class="fa fa-clone left"></i> View
-                            project</a>
+                        <ul class="list-unstyled list-inline font-small">
+                            <li class="list-inline-item pr-2 white-text"><i class="fa fa-clock-o pr-1"></i>{{formatDate(userDetailsMap.get(item.login).updated_at
+                                )}}</li>
+                            <li class="list-inline-item pr-2"><a href="#" class="white-text"><i class="fa fa-heart pr-1"></i>{{userDetailsMap.get(item.login).followers}}</a></li>
+                            <li class="list-inline-item pr-2"><a href="#" class="white-text"><i class="fa fa-user-plus pr-1"></i>{{userDetailsMap.get(item.login).following}}21</a></li>
+                            <li class="list-inline-item"><a href="#" class="white-text"><i class="fa fa-code pr-1"></i>{{userDetailsMap.get(item.login).public_repos}}</a></li>
+                        </ul>
+                        <a [href]="item.html_url" target="_blank" mdbBtn color="pink" class="waves-light"
+                            mdbWavesEffect><i class="fa fa-clone left"></i> View
+                            profile</a>
                     </div>
                 </div>
             </div>

@@ -27,7 +27,7 @@ export class AdvanceSearchComponent implements OnInit {
         if (message.to != "advance_search_component") return;
         this.clearState();
         this.isAdvanceSearchSelected = message.data.isAdvanceSearchSelected;
-        this.populateUser(message.data.msg);
+        if(this.isAdvanceSearchSelected) this.populateUser(message.data.msg);
       }
     )
   }

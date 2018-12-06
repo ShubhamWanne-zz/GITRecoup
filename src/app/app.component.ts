@@ -31,7 +31,7 @@ export class AppComponent {
   }
 
   fetchUsers(form: any){
-    if(form.value.user && form.value.user != ""){
+    if(form.value && form.value.user && form.value.user != ""){
       this.userName= form.value.user;
       this.isAdvanceSearchSelected= true;  
       this.messageService.sendMessage({
