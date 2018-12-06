@@ -6,8 +6,11 @@
     </mdb-navbar-brand>
     <links>
         <form #frm="ngForm" class="form-inline ml-auto" (ngSubmit)="fetchUsers(frm)">
-            <div class="md-form my-0" style="padding-right: 10px">
-                <input size="30" class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search"
+            <div class="md-form my-0 input-group mb-3" style="padding-right: 10px">
+                <div class="input-group-prepend">
+                    <i class="fa fa-github-alt white-text fa-1x py-3" aria-hidden="true"></i>
+                </div>
+                <input size="30" class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search Github"
                     aria-label="Search" />
             </div>
             <button class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>
