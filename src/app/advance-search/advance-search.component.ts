@@ -89,7 +89,23 @@ export class AdvanceSearchComponent implements OnInit {
     this.userDetailsMap.clear();
     this.isInvalidUser= false;
   }
+  
   formatDate(dateFrom){
     return this.dateUtil.getTimeLapsed(new Date(dateFrom));
+  }
+
+  visitProfile(userName: string){
+    this.messageSevice.sendMessage({
+      to: "app_component",
+      data: {
+        msg: {
+          value:{
+            user: userName,
+          }
+        },
+        type: "visitProfile"
+      },
+      from: "advance_search_component"
+    });
   }
 }

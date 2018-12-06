@@ -6,9 +6,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text md-addon">www.github.com/</span>
                 </div>
-                <input type="text" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective [mdbValidate]="false" ngModel required>
+                <input type="text" id="user" name="user" [(ngModel)]="user" class="form-control" mdbInputDirective [mdbValidate]="false" ngModel required>
             </div>
-
             <div class="container alert alert-danger" *ngIf="isInvalidUser" style="text-align: center" role="alert">
                 Entered <strong mdbTooltip="github.com/<Username>" placement="bottom"> username </strong> is not
                 valid !

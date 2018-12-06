@@ -11,12 +11,16 @@ export class AppComponent {
   subscription= new Subscription();
   title = 'GITRecoup';
   userName:string;
+  user:string;
   isAdvanceSearchSelected:boolean = false;
   
   constructor(private messageService: ComponentCommService){
     this.subscription = this.messageService.getMessage().subscribe(
       message=>{
       if(message.to != "app_component") return;
+      if(message.data.type == "visitProfile"){
+        this.redirectToOperationComponent(message.data);
+      }
     });  
   }
 
@@ -24,8 +28,10 @@ export class AppComponent {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   }
+
   ngOnInit() {
   }
+
   ngOnDestroy(){
     this.subscription.unsubscribe();
   }
@@ -44,15 +50,22 @@ export class AppComponent {
       })
       this.userName = "";
     }else{
-      this.isAdvanceSearchSelected= false;
-      this.messageService.sendMessage({
-        to: "advance_search_component",
-        data: {
-          isAdvanceSearchSelected: this.isAdvanceSearchSelected
-        },
-        from: "app_component"
-      })
+      this.closeAdvanceSearchComponent();
     }
+  }
+  redirectToOperationComponent(message: any){
+    this.user = message.msg.value.user;
+    this.closeAdvanceSearchComponent();
+  }
+  closeAdvanceSearchComponent(){
+    this.isAdvanceSearchSelected= false;
+    this.messageService.sendMessage({
+      to: "advance_search_component",
+      data: {
+        isAdvanceSearchSelected: this.isAdvanceSearchSelected
+      },
+      from: "app_component"
+    })
   }
 
 }

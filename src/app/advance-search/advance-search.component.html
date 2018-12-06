@@ -50,9 +50,9 @@
                             <li class="list-inline-item pr-2"><a href="#" class="white-text"><i class="fa fa-user-plus pr-1"></i>{{userDetailsMap.get(item.login).following}}21</a></li>
                             <li class="list-inline-item"><a href="#" class="white-text"><i class="fa fa-code pr-1"></i>{{userDetailsMap.get(item.login).public_repos}}</a></li>
                         </ul>
-                        <a [href]="item.html_url" target="_blank" mdbBtn color="pink" class="waves-light"
-                            mdbWavesEffect><i class="fa fa-clone left"></i> View
-                            profile</a>
+                        <a target="_blank" mdbBtn color="pink" class="waves-light" mdbWavesEffect (click)="visitProfile(item.login)">
+                            <i class="fa fa-clone left"></i> View profile
+                        </a>
                     </div>
                 </div>
             </div>

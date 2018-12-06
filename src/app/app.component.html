@@ -1,4 +1,4 @@
-<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo justify-content-between fixed-top mr-auto">
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark primary-color justify-content-between fixed-top mr-auto">
     <mdb-navbar-brand>
         <a class="navbar-brand icons-xlg git-ic" target="_blank" href="https://github.com/ShubhamWanne/GITRecoup">
             <i class="fa fa-github px-2"></i> GITRecoup
@@ -29,7 +29,7 @@
     </button>
 </div>
 <div *ngIf="!isAdvanceSearchSelected">
-    <div *ngIf="!isAdvanceSearchSelected" class="row text-center flex-center">
+    <div class="row text-center flex-center">
         <div class="col"></div>
         <div class="col sm-4">
             <i class="fa fa-github fa-4x mb-3"></i>
@@ -41,6 +41,6 @@
         <div class="col"></div>
     </div>
     <br /><br />
-    <app-operation></app-operation>
+    <app-operation [user]="user"></app-operation>
 </div>
 <app-advance-search></app-advance-search>

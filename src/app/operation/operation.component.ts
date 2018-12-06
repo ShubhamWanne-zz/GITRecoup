@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 import { ColorGenerator } from '../../Color';
 import { truncate } from 'fs';
@@ -6,6 +6,9 @@ import { DateUtil } from '../utils/Date'
 import { MarkDown } from '../utils/handleMarkDown'
 import { async } from '@angular/core/testing';
 import { RestDOAService } from '../DOAService/rest-doa.service'
+import {ComponentCommService} from "../CommunicationService/component-comm.service"
+import { Subscription } from 'rxjs'
+import { cpus } from 'os';
 
 @Component({
   selector: 'app-operation',
@@ -14,6 +17,7 @@ import { RestDOAService } from '../DOAService/rest-doa.service'
 })
 
 export class OperationComponent implements OnInit {
+  subscription: Subscription;
   dateUtil: DateUtil = new DateUtil();
   markDown: MarkDown = new MarkDown();
   isSubmitClicked: boolean = false;
@@ -25,7 +29,8 @@ export class OperationComponent implements OnInit {
   showRepoButtonTag: string = "Show Repositories";
   isShowChart: boolean = false;
   showChartButtonTag: string = "View";
-  user: string;
+  @Input('user') user: string;
+  temp: number = 0;
   URL: string;
   repository: string;
   company: string;
@@ -57,10 +62,20 @@ export class OperationComponent implements OnInit {
   /*
   -------- Methods
   */
-  constructor(private doaService: RestDOAService) {
+  constructor(private doaService: RestDOAService, private messageService: ComponentCommService) {
+    console.log("Inside constructor")
+      this.subscription = this.messageService.getMessage().subscribe((message)=>{
+        if(message.to != "operation_component") return;
+      });
   }
 
   ngOnInit() {
+    this.subscription = new Subscription();
+    console.log("Created");
+  }
+  ngOnDestroy(): void {
+    console.log("Destroyed");
+    this.subscription.unsubscribe();
   }
 
   resetData = function () {
@@ -104,37 +119,36 @@ export class OperationComponent implements OnInit {
 
   fetchUser = function (form: any) {
     this.resetData();
-    this.isShowRepositories = false;
-    this.showRepoButtonTag = "Show Repositories";
-    this.isShowChart = false;
-    this.showChartButtonTag = "View";
-
     if (form.value.user && form.value.user != "") {
-      this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
+      this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {        
+
         if(res.data.DOAServiceStatus == 404){
           this.isInvalidUser = true;
           return;
         }
-        this.userDetails = res.data,
+        
+
         this.isInvalidUser = false;
-        this.isSubmitClicked = true;
+        this.isSubmitClicked = true;    
+        this.userDetails = res.data,
         this.user = res.data.login;
         this.URL = res.data.url;
         this.repository = res.data.public_repos;
         this.company = res.data.company;
 
-        if (this.company == null)
-          this.company = "Personal"
-
-          this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
+        if (this.company == null) this.company = "Personal"
+        
+        this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
           this.repoData = res.data;
         }, (err) => {
           console.error(err);
-        })
+        });
 
       }, (err) => {
         console.error(err);
       })
+    }else{
+      this.isInvalidUser= true;
     }
   }
 
