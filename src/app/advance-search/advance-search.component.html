@@ -1,5 +1,5 @@
 <div class="container" role="alert" *ngIf="isInvalidUser" style="text-align: center">
-    <img src="../../assets/404_error.png" alt="Responsive Image" style="width: 100%; height: auto;" />
+    <img src="https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/404_error.png?raw=true" alt="Responsive Image" style="width: 100%; height: auto;" />
 </div>
 <div class="container" *ngIf="isAdvanceSearchSelected">
     <div class="d-flex w-100 justify-content-between" *ngIf="!isInvalidUser">
@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col col-md-4" *ngFor="let item of userList; let i=index">
-            <div class="card card-image mb-3" [style.background-image]=" (i%2==0) ? 'url(\'../../assets/background.png\')' : 'url(\'../../assets/background.png\')'">
+            <div class="card card-image mb-3" style="background-image: url(https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/background.png?raw=true);">
                 <div class="text-white text-center d-flex align-items-center rgba-black-strong py-4 px-5">
                     <div>
                         <img [src]="item.avatar_url" alt="User Image" class="rounded-circle img-fluid z-depth-1" height=75
