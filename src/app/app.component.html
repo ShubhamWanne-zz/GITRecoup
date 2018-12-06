@@ -7,23 +7,17 @@
     <links>
         <form #frm="ngForm" class="form-inline ml-auto" (ngSubmit)="fetchUsers(frm)">
             <div class="md-form my-0 input-group mb-3" style="padding-right: 10px">
-                <div class="input-group-prepend">
-                    <i class="fa fa-github-alt white-text fa-1x py-3" aria-hidden="true"></i>
-                </div>
-                <input size="30" class="form-control" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search Github"
+                <input size="30" class="form-control py-3" ngModel required name="user" [(ngModel)]="userName" type="text" placeholder="Search Github"
                     aria-label="Search" />
+                    <div *ngIf="isAdvanceSearchSelected" class="input-group-append" (click)="fetchUsers({})">
+                        <i class="fa fa-close white-text fa-1x py-3" aria-hidden="true"></i>
+                    </div>
             </div>
             <button class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>
         </form>
     </links>
 </mdb-navbar>
 <br /><br />
-<div *ngIf="isAdvanceSearchSelected" class="alert alert-primary alert-dismissible fade show" role="alert" style="position: fixed; width: 100%; z-index: 99;">
-        <strong>To close search panel</strong> dismiss this alert.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="fetchUsers({})">
-            <span aria-hidden="true">&times;</span>
-        </button>
-</div>    
 <br /><br /><br />
 <div class="d-flex justify-content-end" style="padding-right: 20px;">
     <button class="btn purple-gradient btn-circle btn-xl sticky" style="position: fixed; z-index: 99; bottom: 20px"

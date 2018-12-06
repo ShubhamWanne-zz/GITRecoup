@@ -37,6 +37,9 @@ export class AppComponent {
   }
 
   fetchUsers(form: any){
+    if(!form.value){
+      this.userName="";
+    }
     if(form.value && form.value.user && form.value.user != ""){
       this.userName= form.value.user;
       this.isAdvanceSearchSelected= true;  
@@ -48,12 +51,12 @@ export class AppComponent {
         },
         from: "app_component"
       })
-      this.userName = "";
     }else{
       this.closeAdvanceSearchComponent();
     }
   }
   redirectToOperationComponent(message: any){
+    this.userName="";
     this.user = message.msg.value.user;
     this.closeAdvanceSearchComponent();
   }
