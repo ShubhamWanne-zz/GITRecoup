@@ -4,6 +4,7 @@ import { RestDOAService } from "../DOAService/rest-doa.service"
 import { ComponentCommService } from "../CommunicationService/component-comm.service"
 import { Subscription } from 'rxjs'
 import { DateUtil } from '../utils/Date'
+import {StringUtils} from '../utils/StringUtils';
 
 @Component({
   selector: 'app-advance-search',
@@ -13,6 +14,7 @@ import { DateUtil } from '../utils/Date'
 
 export class AdvanceSearchComponent implements OnInit {
   subscription = new Subscription();
+  stringUtils= new StringUtils();
   isAdvanceSearchSelected: boolean = false;
   userList: any[]= new Array<any>();
   userName: string;
@@ -126,5 +128,9 @@ export class AdvanceSearchComponent implements OnInit {
       this.result_incrementor++;
       this.populateUser(this.userName);
     }
+  }
+
+  getString(stringVar){
+    return this.stringUtils.getString(stringVar);
   }
 }

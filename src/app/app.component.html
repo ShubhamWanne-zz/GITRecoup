@@ -9,11 +9,14 @@
             <div class="md-form my-0 input-group mb-3" style="padding-right: 10px">
                 <input size="30" class="form-control py-3" ngModel required name="user" [(ngModel)]="userName" type="email" placeholder="Search Github"
                     aria-label="Search" />
-                    <div *ngIf="isAdvanceSearchSelected" class="input-group-append" (click)="fetchUsers({})">
+                    <div *ngIf="isAdvanceSearchSelected && !(userName=='')" class="input-group-append" (click)="clearSearch()">
                         <i class="fa fa-close white-text fa-1x py-3" aria-hidden="true"></i>
                     </div>
             </div>
             <button class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit">Search</button>
+            <button *ngIf="isAdvanceSearchSelected" class="btn btn-outline-white btn-md my-0 ml-sm-2" type="submit" (click)="fetchUsers({})">
+                <i class="fa fa-home fa-lg white-text" (click)="fetchUsers({})" aria-hidden="true"></i>
+            </button>
         </form>
     </links>
 </mdb-navbar>

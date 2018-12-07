@@ -9,6 +9,7 @@ import { RestDOAService } from '../DOAService/rest-doa.service'
 import {ComponentCommService} from "../CommunicationService/component-comm.service"
 import { Subscription } from 'rxjs'
 import { cpus } from 'os';
+import {StringUtils} from '../utils/StringUtils';
 
 @Component({
   selector: 'app-operation',
@@ -19,6 +20,7 @@ import { cpus } from 'os';
 export class OperationComponent implements OnInit {
   subscription: Subscription;
   dateUtil: DateUtil = new DateUtil();
+  stringUtils= new StringUtils();
   markDown: MarkDown = new MarkDown();
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
@@ -239,5 +241,7 @@ export class OperationComponent implements OnInit {
       console.error(err);
     })
   }
-
+  getString(stringVar){
+    return this.stringUtils.getString(stringVar);
+  }
 }

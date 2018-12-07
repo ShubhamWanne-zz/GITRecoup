@@ -28,7 +28,7 @@
                 <p class="mb-0 deep-blue-grey-text">
                         <i class="fa fa-quote-left px-1 blue-grey-text" aria-hidden="true"></i>
                         <strong>
-                            {{userDetails.bio == null ? "Github Enthusiasts" : userDetails.bio}}
+                            {{userDetails.bio == null ? "Github Enthusiasts" : getString(userDetails.bio)}}
                         </strong>
                         <i class="fa fa-quote-right px-2 blue-grey-text" aria-hidden="true"></i>
                     </p>
@@ -277,14 +277,19 @@
                     </div>
 
                 </div>
-
                 <div class="list-group">
+                    <div style="text-align: center; padding-top: 50px" *ngIf="forksData.length == 0">
+                       <p class="red-text py-2">
+                            <i class="fa fa-rocket fa-1x red-text" aria-hidden="true"></i>
+                            <strong> You're a lone ranger ! </strong>
+                        </p>
+                    </div>
                     <a [href]="item.html_url" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start"
                         *ngFor="let item of forksData">
                         <div class="row">
                             <div class="col-2 align-self-center">
                                 <img [src]="item.owner.avatar_url" alt="User Image" class="rounded-circle img-fluid z-depth-1"
-                                    height=50 width=50>
+                                    height=100 width=100>
                             </div>
                             <div class="col-10 float-left">
                                 <div class="d-flex w-100 justify-content-between">
