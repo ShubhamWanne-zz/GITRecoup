@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col col-md-4" *ngFor="let item of userList; let i=index">
-            <div class="card card-image mb-3" style="background-image: url(https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/background.png?raw=true);">
+            <div class="card card-image mb-3" style="background-image: url(https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/background.png?raw=true); display: inline-block;">
                 <div class="text-white text-center d-flex align-items-center rgba-black-strong py-4 px-5">
                     <div>
                         <img [src]="item.avatar_url" alt="User Image" class="rounded-circle img-fluid z-depth-1" height=75
@@ -25,14 +25,14 @@
                             <i class="fa fa-star amber-text" aria-hidden="true"></i>
                         </a>
                         <h5 class="pink-text py-2"><i class="fa fa-user-circle-o px-2"></i>{{item.login}}</h5>
-                        <h5 class="card-title pt-2">
+                        <h6 class="card-title pt-2">
                             <i class="fa fa-quote-left px-1" aria-hidden="true"></i>
                             <strong>
                                 {{userDetailsMap.get(item.login).bio == null ? "GitHub enthusiast" :
                                 getString(userDetailsMap.get(item.login).bio)}}
                             </strong>
                             <i class="fa fa-quote-right px-2" aria-hidden="true"></i>
-                        </h5>
+                        </h6>
                         <p>
                             <i class="fa fa-map-marker px-2" aria-hidden="true"></i>
                             {{userDetailsMap.get(item.login).location == null ? "Earth" :
