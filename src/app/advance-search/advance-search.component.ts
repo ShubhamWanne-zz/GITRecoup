@@ -101,6 +101,7 @@ export class AdvanceSearchComponent implements OnInit {
   clearState(){
     console.log("Clearing the previous state ... ");
     this.userList.splice(0);
+    this.result_incrementor = 1;
     this.userDetailsMap.clear();
     this.isInvalidUser= false;
   }
