@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { RestDoaAdvanceService } from "../DOAService/rest-doa-advance.service"
 import { RestDOAService } from "../DOAService/rest-doa.service"
 import { ComponentCommService } from "../CommunicationService/component-comm.service"
@@ -18,6 +18,7 @@ export class AdvanceSearchComponent implements OnInit {
   isAdvanceSearchSelected: boolean = false;
   userList: any[]= new Array<any>();
   userName: string;
+  previousUserName: string="";
   isInvalidUser: boolean = false;
   userDetailsMap: Map<string, any>= new Map();
   dateUtil= new DateUtil();
@@ -45,6 +46,9 @@ export class AdvanceSearchComponent implements OnInit {
   }
 
   populateUser(userName) {
+    if(this.previousUserName != "" && this.previousUserName != userName){
+      this.clearState();
+    }
     this.advanceDoaService.getUsers(userName, this.result_incrementor).then((res) => {
       if(res.data.total_count == 0){
         this.isInvalidUser= true;
@@ -53,7 +57,7 @@ export class AdvanceSearchComponent implements OnInit {
       if(this.result_incrementor == 1){
         this.userName = userName;
         this.userList = res.data.items;
-        this.total_result = res.data.total_count;  
+        this.total_result = res.data.total_count;
       }else{
         this.userList = this.userList.concat(res.data.items);
       }
@@ -64,8 +68,6 @@ export class AdvanceSearchComponent implements OnInit {
           this.handlerError(err);
         })
       }
-      console.log(this.userList.length);
-      console.log(this.result_incrementor);
     }, (err) => {
       this.handlerError(err);
     })
@@ -97,12 +99,12 @@ export class AdvanceSearchComponent implements OnInit {
   }
 
   clearState(){
-    this.isAdvanceSearchSelected = false;
+    console.log("Clearing the previous state ... ");
     this.userList.splice(0);
     this.userDetailsMap.clear();
     this.isInvalidUser= false;
   }
-  
+
   formatDate(dateFrom){
     return this.dateUtil.getTimeLapsed(new Date(dateFrom));
   }

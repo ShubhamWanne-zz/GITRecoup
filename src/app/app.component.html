@@ -6,11 +6,11 @@
     </mdb-navbar-brand>
     <links>
         <form #frm="ngForm" class="form-inline ml-auto" (ngSubmit)="fetchUsers(frm)">
-                <div *ngIf="isAdvanceSearchSelected" style="align-items: flex-end; padding-right: 20px" (click)="fetchUsers({})">
+                <div style="align-items: flex-end; padding-right: 20px" (click)="fetchUsers({})">
                         <button class="btn primary-color btn-md btn-circle btn-l" (click)="goToTop()">
                             <i class="fa fa-home fa-lg" aria-hidden="true"></i>
-                        </button>    
-                    </div>        
+                        </button>
+                    </div>
             <div class="md-form my-0 input-group mb-3" style="padding-right: 10px">
                 <input size="50" class="form-control py-3" ngModel required name="user" [(ngModel)]="userName" type="email" placeholder="Search Github"
                     aria-label="Search" />
