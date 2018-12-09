@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentCommService } from 'src/app/CommunicationService/component-comm.service'; 
+import { ComponentCommService } from 'src/app/CommunicationService/component-comm.service';
 import { Subscription } from 'rxjs'
 
 @Component({
@@ -13,7 +13,7 @@ export class AppComponent {
   userName:string;
   user:string;
   isAdvanceSearchSelected:boolean = false;
-  
+
   constructor(private messageService: ComponentCommService){
     this.subscription = this.messageService.getMessage().subscribe(
       message=>{
@@ -21,7 +21,7 @@ export class AppComponent {
       if(message.data.type == "visitProfile"){
         this.redirectToOperationComponent(message.data);
       }
-    });  
+    });
   }
 
   goToTop(){
@@ -38,12 +38,12 @@ export class AppComponent {
 
   fetchUsers(form: any){
     if(!form.value){
-      this.userName="";      
+      this.userName="";
       this.closeAdvanceSearchComponent();
     }
     if(form.value && form.value.user && form.value.user != ""){
       this.userName= form.value.user;
-      this.isAdvanceSearchSelected= true;  
+      this.isAdvanceSearchSelected= true;
       this.messageService.sendMessage({
         to: "advance_search_component",
         data: {
