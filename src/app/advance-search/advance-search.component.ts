@@ -15,15 +15,25 @@ import {StringUtils} from '../utils/StringUtils';
 export class AdvanceSearchComponent implements OnInit {
   subscription = new Subscription();
   stringUtils= new StringUtils();
+  dateUtil= new DateUtil();
+
   isAdvanceSearchSelected: boolean = false;
+  selectedTab: string = "Users";
+  total_result: number;
+  result_incrementor: number=1;
+
+  //Users
   userList: any[]= new Array<any>();
   userName: string;
   previousUserName: string="";
   isInvalidUser: boolean = false;
+  isUserSelected: boolean = true;
   userDetailsMap: Map<string, any>= new Map();
-  dateUtil= new DateUtil();
-  total_result: number;
-  result_incrementor: number=1;
+  //Repositories
+  repoList: any[]= new Array<any>();
+  //Topics
+  topicList: any[]= new Array<any>();
+
   constructor(private advanceDoaService: RestDoaAdvanceService,
               private messageSevice: ComponentCommService,
               private doaService: RestDOAService,
@@ -45,10 +55,20 @@ export class AdvanceSearchComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  fetchUser(){
+    this.selectedTab = "Users"
+    if(this.userName != "")
+      this.populateUser(this.userName);
+  }
+
   populateUser(userName) {
     if(this.previousUserName != "" && this.previousUserName != userName){
       this.clearState();
     }
+    this.repoList.length = 0;
+    this.topicList.length = 0;
+    if(this.userList.length != 0)
+      return;
     this.advanceDoaService.getUsers(userName, this.result_incrementor).then((res) => {
       if(res.data.total_count == 0){
         this.isInvalidUser= true;
@@ -69,6 +89,46 @@ export class AdvanceSearchComponent implements OnInit {
         })
       }
     }, (err) => {
+      this.handlerError(err);
+    })
+  }
+
+  fetchRepositries(){
+    this.clearState();
+    this.selectedTab = "Repositories";
+    this.isUserSelected = false;
+    this.getRepositories(this.userName, this.result_incrementor);
+  }
+
+  getRepositories(topicName: string, page: number){
+    this.advanceDoaService.getRepositories(topicName, page).then((res)=>{
+      if(page == 1){
+        this.repoList = res.data.items;
+      }else{
+        this.repoList = this.repoList.concat(res.data.items);
+      }
+      this.total_result = res.data.total_count;
+    },(err)=>{
+      this.handlerError(err);
+    })
+  }
+
+  fetchTopics(){
+    this.clearState();
+    this.selectedTab = "Topics";
+    this.isUserSelected = false;
+    this.getTopics(this.userName, this.result_incrementor);
+  }
+
+  getTopics(search:string, page: number){
+    this.advanceDoaService.getTopics(search, page).then((res)=>{
+      if(page == 1){
+        this.topicList = res.data.items;
+      }else{
+        this.topicList = this.topicList.concat(res.data.items);
+      }
+      this.total_result = res.data.total_count;
+    },(err)=>{
       this.handlerError(err);
     })
   }
@@ -101,9 +161,13 @@ export class AdvanceSearchComponent implements OnInit {
   clearState(){
     console.log("Clearing the previous state ... ");
     this.userList.splice(0);
+    this.repoList= new Array<any>();
+    this.topicList= new Array<any>();
+    this.selectedTab = "Users";
     this.result_incrementor = 1;
     this.userDetailsMap.clear();
     this.isInvalidUser= false;
+    this.isUserSelected = true;
   }
 
   formatDate(dateFrom){
@@ -127,9 +191,10 @@ export class AdvanceSearchComponent implements OnInit {
 
   viewMore(){
     if(this.result_incrementor <= Math.ceil(this.total_result/30)){
-      console.log(this.result_incrementor);
       this.result_incrementor++;
-      this.populateUser(this.userName);
+      if(this.selectedTab == "Users") this.populateUser(this.userName);
+      else if(this.selectedTab == "Repositories") this.getRepositories(this.userName, this.result_incrementor);
+      else if(this.selectedTab == "Topics") this.getTopics(this.userName, this.result_incrementor);
     }
   }
 
