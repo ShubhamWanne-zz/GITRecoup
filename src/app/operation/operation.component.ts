@@ -22,6 +22,7 @@ export class OperationComponent implements OnInit {
   dateUtil: DateUtil = new DateUtil();
   stringUtils= new StringUtils();
   markDown: MarkDown = new MarkDown();
+  isSearchingStarted: boolean = false;
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
   isShowRepositories: boolean = false;
@@ -77,6 +78,7 @@ export class OperationComponent implements OnInit {
   }
 
   resetData = function () {
+    this.isSearchingStarted = false;
     this.isSubmitClicked= false;
     this.isInvalidUser = false;
     this.isShowRepositories= false;
@@ -117,6 +119,7 @@ export class OperationComponent implements OnInit {
 
   fetchUser = function (form: any) {
     this.resetData();
+    this.isSearchingStarted = true;
     if (form.value.user && form.value.user != "") {
       this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
 
