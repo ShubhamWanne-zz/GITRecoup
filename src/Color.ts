@@ -227,8 +227,6 @@ export class ColorGenerator{
                 "800": "#f9a825",
                 "900": "#f57f17",
                 "hex": "#ffeb3b",
-                "a100": "#ffff8d",
-                "a200": "#ffff00",
                 "a400": "#ffea00",
                 "a700": "#ffd600"
             },
@@ -324,15 +322,12 @@ export class ColorGenerator{
             },
             "black": {
                 "hex": "#000000"
-            },
-            "white": {
-                "hex": "#ffffff"
             }
         }
         // pick random property
         //var property = pickRandomProperty(colors);
         var colorList = colors[this.pickRandomProperty(colors)];
-        var newColorKey = this.pickRandomProperty(colorList);    
+        var newColorKey = this.pickRandomProperty(colorList);
         var newColor = colorList[newColorKey];
         return newColor;
     }

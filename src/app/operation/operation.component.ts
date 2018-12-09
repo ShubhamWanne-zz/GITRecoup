@@ -118,16 +118,14 @@ export class OperationComponent implements OnInit {
   fetchUser = function (form: any) {
     this.resetData();
     if (form.value.user && form.value.user != "") {
-      this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {        
+      this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
 
         if(res.data.DOAServiceStatus == 404){
           this.isInvalidUser = true;
           return;
         }
-        
-
         this.isInvalidUser = false;
-        this.isSubmitClicked = true;    
+        this.isSubmitClicked = true;
         this.userDetails = res.data,
         this.user = res.data.login;
         this.URL = res.data.url;
@@ -135,7 +133,7 @@ export class OperationComponent implements OnInit {
         this.company = res.data.company;
 
         if (this.company == null) this.company = "Personal"
-        
+
         this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
           this.repoData = res.data;
         }, (err) => {
@@ -183,10 +181,11 @@ export class OperationComponent implements OnInit {
   getChart = function () {
     this.isShowRepositories = false;
     this.showRepoButtonTag = "Show Repositories";
-
     this.isShowChart = true;
+
     if (!this.isChartCreated) {
       for (let repo of this.repoData) {
+        if(repo.forks_count == 0) continue;
         this.chartData.push(repo.forks_count);
         this.chartLabels.push(
           repo.name
@@ -194,8 +193,8 @@ export class OperationComponent implements OnInit {
         this.backgroundColor.push(this.colorGenerator.materialColor());
       }
       this.chartColors[0].backgroundColor = this.backgroundColor;
+      this.isChartCreated = true;
     }
-    this.isChartCreated = true;
   }
 
   public chartClicked(e: any): void { }

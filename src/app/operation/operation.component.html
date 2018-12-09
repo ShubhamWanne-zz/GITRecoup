@@ -56,21 +56,21 @@
             </a>
         </p>
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
-            <i class="fa fa-heart mr-1" aria-hidden="true"></i> followers
+            <i class="fa fa-heart mr-1 px-1" aria-hidden="true"></i> followers
         </button>
         <button mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); getChart()">
-            <i class="fa fa-bar-chart mr-1" aria-hidden="true"></i> {{showChartButtonTag}}
+          <i class="fa fa-pie-chart mr-1 px-1" aria-hidden="true"></i>{{showChartButtonTag}}
         </button>
         <hr class="my-4">
         <p class="text-info">Profile updated {{getFormattedDate(userDetails.updated_at)}}</p>
         <p>Public Repositories : {{repository}}</p>
         <a mdbBtn color="primary" size="lg" target="_blank" [href]="userDetails.html_url" role="button" mdbWavesEffect>
-            <i class="fa fa-github mr-1" aria-hidden="true"></i>
+            <i class="fa fa-github mr-1 px-1" aria-hidden="true"></i>
             Learn more
         </a>
         <a mdbBtn color="indigo" size="lg" role="button" mdbWavesEffect class="text-white" (click)="fetchRepo()">
-            <i *ngIf="!isShowRepositories" class="fa fa-folder mr-1" aria-hidden="true"></i>
-            <i *ngIf="isShowRepositories" class="fa fa-folder-open mr-1" aria-hidden="true"></i> {{showRepoButtonTag}}
+            <i *ngIf="!isShowRepositories" class="fa fa-folder mr-1 px-1" aria-hidden="true"></i>
+            <i *ngIf="isShowRepositories" class="fa fa-folder-open mr-1 px-1" aria-hidden="true"></i> {{showRepoButtonTag}}
         </a>
     </div>
 </div>
@@ -231,13 +231,17 @@
                         [colors]="chartColors" [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
                         (chartClick)="chartClicked($event)">
                     </canvas>
+                    <div class="container" style="text-align: center;">
+                      <p>
+                        <i class="fa fa-bookmark px-1" aria-hidden="true"></i>
+                        <small>Repository analysis of {{userDetails == undefined ? "" : userDetails.name}}</small>
+                      </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 <!--
     REPO DETAILS PANE
 -->
