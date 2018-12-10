@@ -124,7 +124,6 @@ export class OperationComponent implements OnInit {
   }
 
   fetchUser = function (form: any) {
-    this.isSearchingStarted = true;
     if (form.value.user && form.value.user != "") {
       this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
 
@@ -132,6 +131,7 @@ export class OperationComponent implements OnInit {
           this.isInvalidUser = true;
           return;
         }
+        this.isChartCreated = false;
         this.isInvalidUser = false;
         this.isSubmitClicked = true;
         this.userDetails = res.data,
