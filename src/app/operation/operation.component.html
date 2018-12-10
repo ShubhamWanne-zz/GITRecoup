@@ -58,7 +58,7 @@
         <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
             <i class="fa fa-heart mr-1 px-1" aria-hidden="true"></i> followers
         </button>
-        <button mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); getChart()">
+        <button mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); viewChart()">
           <i class="fa fa-pie-chart mr-1 px-1" aria-hidden="true"></i>{{showChartButtonTag}}
         </button>
         <hr class="my-4">
@@ -225,15 +225,17 @@
             </div>
             <div class="modal-body">
                 <div style="display: block" *ngIf="isShowChart">
-                    <canvas mdbChart height="200" width="100" [chartType]="chartType" [data]="chartData" [labels]="chartLabels"
-                        [colors]="chartColors" [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)">
-                    </canvas>
-                    <div class="container" style="text-align: center;">
-                      <p>
-                        <i class="fa fa-bookmark px-1" aria-hidden="true"></i>
-                        <small>Repository analysis of {{userDetails == undefined ? "" : userDetails.name}}</small>
-                      </p>
+                    <div *ngFor="let index of numberOfChartsArray">
+                            <div class="container" style="text-align: center;">
+                                    <p class="lead">
+                                        <i class="fa fa-bookmark px-2" aria-hidden="true"></i>
+                                        <small>Repository analysis of {{userDetails == undefined ? "" : userDetails.name}}</small>
+                                    </p>
+                                </div>            
+                        <canvas mdbChart height="175" width="100" [chartType]="chartType" [data]="chartData[index]" [labels]="chartLabels[index]"
+                            [colors]="colors[index]" [options]="chartOptions" [legend]="true">
+                        </canvas>
+                        <hr>
                     </div>
                 </div>
             </div>

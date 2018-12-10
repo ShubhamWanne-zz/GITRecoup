@@ -22,6 +22,7 @@ export class OperationComponent implements OnInit {
   dateUtil: DateUtil = new DateUtil();
   stringUtils= new StringUtils();
   markDown: MarkDown = new MarkDown();
+
   isSearchingStarted: boolean = false;
   isSubmitClicked: boolean = false;
   isInvalidUser: boolean = false;
@@ -49,11 +50,15 @@ export class OperationComponent implements OnInit {
   /*
   ---- Chart Details
   */
-  isChartCreated: boolean = false;
+  public isChartCreated: boolean = false;
+  public numberOfCharts: number = 1;
+  public numberOfChartsArray= new Array<any>();
+  public repoListWithNonZeroForks : Array<any>[];
   public chartType: string = 'polarArea';
-  public chartData = new Array();
-  public chartLabels = new Array();
-  public backgroundColor = new Array();
+  public chartData = new Array<Array<any>>();
+  public chartLabels = new Array<Array<any>>();
+  public backgroundColor = new Array<Array<any>>();
+  public colors= new Array<Array<any>>();
   public chartColors: Array<any> = [{
     hoverBorderColor: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)'],
     hoverBorderWidth: 0,
@@ -96,6 +101,7 @@ export class OperationComponent implements OnInit {
     this.chartData.length = 0;
     this.chartLabels.length = 0;
     this.backgroundColor.length = 0;
+    this.numberOfCharts = 1;
     this.currentRepo = {};
   }
 
@@ -181,24 +187,59 @@ export class OperationComponent implements OnInit {
     }
   }
 
-  getChart = function () {
+  createChart = function (repoTobeCharted, index: number) {
+    this.colors[index]= [{
+      hoverBorderColor: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)'],
+      hoverBorderWidth: 0
+    }];
+    this.chartData[index]= new Array();
+    this.chartLabels[index]= new Array();
+    this.backgroundColor[index]= new Array();
+    for (let repo of repoTobeCharted) {
+      if(repo.forks_count == 0) continue;
+      this.chartData[index].push(repo.forks_count);
+      this.chartLabels[index].push(
+        repo.name
+      );
+      this.backgroundColor[index].push(this.colorGenerator.materialColor());
+    }
+    this.colors[index][0].backgroundColor = this.backgroundColor[index];
+    this.chartColors[0].backgroundColor = this.backgroundColor[0];
+    console.log("------------------------------ "+ index +"------------------------------ ")
+    console.log("Background Color : "+ this.backgroundColor[index]);
+    console.log("Chart Data : " +  this.chartData[index]);
+    console.log("Chart Labels : "+ this.chartLabels[index]);
+    console.log("Color : "+ JSON.stringify(this.colors[index]))
+  }
+
+  viewChart(){
     this.isShowRepositories = false;
     this.showRepoButtonTag = "Show Repositories";
     this.isShowChart = true;
-
-    if (!this.isChartCreated) {
-      for (let repo of this.repoData) {
-        if(repo.forks_count == 0) continue;
-        this.chartData.push(repo.forks_count);
-        this.chartLabels.push(
-          repo.name
-        );
-        this.backgroundColor.push(this.colorGenerator.materialColor());
-      }
-      this.chartColors[0].backgroundColor = this.backgroundColor;
+    if(!this.isChartCreated)
+    {
       this.isChartCreated = true;
+      this.repoListWithNonZeroForks = this.repoData.filter((repo)=>{
+        return repo.forks_count > 0;
+      })
+      console.log("repoListWithNonZeroForks length : " + this.repoListWithNonZeroForks.length);
+      
+      this.numberOfCharts = Math.ceil(this.repoListWithNonZeroForks.length / 30);
+
+      console.log("Number of Charts : "+ this.numberOfCharts);
+
+      this.numberOfChartsArray= new Array(this.numberOfCharts);
+      for(var i=0;i<this.numberOfCharts;i++) this.numberOfChartsArray[i]=i;
+
+      var index=0;
+      for(var i=0; i<this.numberOfCharts; i++){
+          this.createChart(this.repoListWithNonZeroForks.splice(0, 30), index);
+          index++;
+      }
     }
+
   }
+
 
   public chartClicked(e: any): void { }
 
