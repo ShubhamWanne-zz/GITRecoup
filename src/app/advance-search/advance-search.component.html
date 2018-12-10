@@ -1,47 +1,64 @@
 <div class="container" *ngIf="isAdvanceSearchSelected">
 
     <div class="row">
-      <div class="col-md-12">
-        <ul class="nav blue-gradient lighten-3 py-2 mb-r font-weight-bold z-depth-1" style="margin: 5px 5px;">
-          <li class="nav-item">
-            <a class="nav-link active white-text" (click)="fetchUser()">
-                <i class="fa fa-user px-2 white-text" aria-hidden="true"></i>Users
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link white-text" (click)="fetchTopics()">
-              <i class="fa fa-code px-2 white-text" aria-hidden="true"></i>Topics
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link white-text" (click)="fetchRepositries()">
-              <i class="fa fa-book px-2 white-text" aria-hidden="true"></i>Repositories
-            </a>
-          </li>
-        </ul>
-      </div>
+        <div class="col-md-12">
+            <ul class="nav blue-gradient lighten-3 py-2 mb-r font-weight-bold z-depth-1" style="margin: 5px 5px;">
+                <li class="nav-item">
+                    <a class="nav-link active white-text" (click)="fetchUser()">
+                        <i class="fa fa-user px-2 white-text" aria-hidden="true"></i>Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link white-text" (click)="fetchTopics()">
+                        <i class="fa fa-code px-2 white-text" aria-hidden="true"></i>Topics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link white-text" (click)="fetchRepositries()">
+                        <i class="fa fa-book px-2 white-text" aria-hidden="true"></i>Repositories
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <br>
+
     <div class="container" role="alert" *ngIf="isInvalidUser" style="text-align: center">
-        <img src="https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/404_error.png?raw=true" alt="Responsive Image" style="width: 100%; height: auto;" />
+        <img src="https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/404_error.png?raw=true" alt="Responsive Image"
+            style="width: 100%; height: auto;" />
     </div>
+
     <div class="d-flex w-100 justify-content-between" *ngIf="!isInvalidUser">
         <p>
-            <i *ngIf="topicList.length !=0 || repoList.length != 0 || userList.length != 0" class="fa fa-check-circle teal-text" aria-hidden="true"></i>
+            <i *ngIf="topicList.length !=0 || repoList.length != 0 || userList.length != 0" class="fa fa-check-circle teal-text"
+                aria-hidden="true"></i>
             About
             <strong *ngIf="topicList.length !=0 || repoList.length != 0 ||userList.length != 0">
                 {{ total_result }}
             </strong>
-            <i *ngIf="(selectedTab == 'Repositories' && repoList.length == 0 ) ||
-                      (selectedTab == 'Users' && userList.length == 0 ) ||
-                      (selectedTab == 'Topics' && topicList.length == 0 ) "
+            <i *ngIf="(selectedTab == 'Repositories' && repoList.length == 0  && isRepoNotFound == false) ||
+                      (selectedTab == 'Users' && userList.length == 0 && isInvalidUser == false) ||
+                      (selectedTab == 'Topics' && topicList.length == 0 && isTopicNotFound == false ) "
                 class="fa fa-refresh fa-spin"></i>
             results of
             <strong>{{selectedTab}}</strong>.
         </p>
 
     </div>
-    <hr/>
+
+    <hr />
+
+    <div class="alert alert-danger" role="alert" *ngIf="(selectedTab == 'Repositories' && isRepoNotFound == true) || 
+            (selectedTab == 'Topics' && isTopicNotFound == true)">
+        <h4 class="alert-heading">{{selectedTab}} not found !</h4>
+        <p>Search criteria "{{userName}}"</p>
+        <p>We deeply <strong> remorse </strong> for inconvinience, but search criteria doesn't have a perfect
+            match !</p>
+        <hr>
+        <p class="mb-0">However you can write us query <a href="https://github.com/ShubhamWanne/GitRecoup">here.</a></p>
+    </div>
+
+
     <div class="row">
         <div class="col col-md-4" *ngFor="let item of userList; let i=index">
             <div class="card card-image mb-3" style="background-image: url(https://github.com/ShubhamWanne/GITRecoup/blob/master/src/assets/background.png?raw=true); display: inline-block;">
@@ -89,57 +106,63 @@
     </div>
 
     <div *ngIf="topicList.length != 0" class="list-group">
-      <a class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let topic of topicList">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-2 h5">{{topic.display_name == null ? topic.name : topic.display_name}}</h5>
-          <small>{{formatDate(topic.updated_at)}}</small>
-        </div>
-        <a *ngFor="let star of getStarCount(topic.score)">
-            <i class="fa fa-star amber-text" aria-hidden="true"></i>
+        <a class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let topic of topicList">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-2 h5">{{topic.display_name == null ? topic.name : topic.display_name}}</h5>
+                <small>{{formatDate(topic.updated_at)}}</small>
+            </div>
+            <a *ngFor="let star of getStarCount(topic.score)">
+                <i class="fa fa-star amber-text" aria-hidden="true"></i>
+            </a>
+            <footer class="blockquote-footer mb-3">Created by <cite [title]="topic.created_by || 'Anonymous'">
+                    {{topic.created_by == null ? "Anonymous" : topic.created_by}}
+            </cite></footer>
+            <p class="mb-2">{{topic.short_description == null ? "Description not found." : topic.short_description}}</p>
+            <small>{{topic.description == null ? "Readme not found" : topic.description}}</small>
         </a>
-        <p class="mb-2">{{topic.short_description == null ? "Description not found." : topic.short_description}}</p>
-        <small>{{topic.description == null ? "Readme not found" : topic.description}}</small>
-      </a>
     </div>
 
     <div *ngIf="repoList.length != 0" class="list-group">
-      <a [href]="repo.html_url" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let repo of repoList">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-2 h5">{{repo.name}}</h5>
-          <small>{{formatDate(repo.updated_at)}}</small>
-        </div>
-        <a *ngFor="let star of getStarCount(repo.score)">
-            <i class="fa fa-star amber-text" aria-hidden="true"></i>
+        <a [href]="repo.html_url" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start"
+            *ngFor="let repo of repoList">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-2 h5">{{repo.name}}</h5>
+                <small>{{formatDate(repo.updated_at)}}</small>
+            </div>
+            <a *ngFor="let star of getStarCount(repo.score)">
+                <i class="fa fa-star amber-text" aria-hidden="true"></i>
+            </a>
+            <p class="mb-2">{{repo.description == null ? "Description not found." : repo.description}}</p>
+            <p class="mb-2">Owned by <strong>{{repo.owner.login}}</strong></p>
+            <p class="mb-2"><a [href]="repo.owner.html_url" target="_blank">{{repo.owner.html_url}}</a></p>
+            <ul class="list-unstyled list-inline font-small">
+                <li class="list-inline-item pr-2 "><i class="fa fa-code-fork pr-1"></i>
+                    {{repo.forks}}
+                </li>
+                <li class="list-inline-item pr-2 "><i class="fa fa-bug pr-1"></i>
+                    {{repo.open_issues}}
+                </li>
+            </ul>
+            <small>Default branch : <strong>{{repo.default_branch}}</strong></small>
         </a>
-        <p class="mb-2">{{repo.description == null ? "Description not found." : repo.description}}</p>
-        <p class="mb-2">Owned by <strong>{{repo.owner.login}}</strong></p>
-        <p class="mb-2"><a [href]="repo.owner.html_url" target="_blank">{{repo.owner.html_url}}</a></p>
-        <ul class="list-unstyled list-inline font-small">
-            <li class="list-inline-item pr-2 "><i class="fa fa-code-fork pr-1"></i>
-              {{repo.forks}}
-            </li>
-            <li class="list-inline-item pr-2 "><i class="fa fa-bug pr-1"></i>
-              {{repo.open_issues}}
-            </li>
-        </ul>
-        <small>Default branch : <strong>{{repo.default_branch}}</strong></small>
-      </a>
     </div>
 
     <div *ngIf="(userList.length != 0 && (userList.length < total_result)) ||
                 (topicList.length != 0 && (topicList.length < total_result)) ||
-                (repoList.length != 0 && (repoList.length < total_result))" class="container" style="padding: 50px; align-content: center">
-        <button mdbBtn type="button" gradient="peach" block="true" mdbWavesEffect (click)="viewMore()">View more {{selectedTab.toLowerCase()}}</button>
+                (repoList.length != 0 && (repoList.length < total_result))"
+        class="container" style="padding: 50px; align-content: center">
+        <button mdbBtn type="button" gradient="peach" block="true" mdbWavesEffect (click)="viewMore()">View more
+            {{selectedTab.toLowerCase()}}</button>
     </div>
 
     <div class="container" *ngIf="(userList.length == total_result) ||
-                                  (topicList.length != total_result) ||
-                                  (repoList.length != total_result)" >
-      <div class="footer-copyright" style="text-align: center; padding-top: 50px; padding-bottom: 20px">
-        <div class="container-fluid">
-            © 2018 Copyright: <a href="https://github.com/ShubhamWanne"> https://github.com/ShubhamWanne </a>
+                                  (topicList.length == total_result) ||
+                                  (repoList.length == total_result)">
+        <div class="footer-copyright" style="text-align: center; padding-top: 50px; padding-bottom: 20px">
+            <div class="container-fluid">
+                © 2018 Copyright: <a href="https://github.com/ShubhamWanne"> https://github.com/ShubhamWanne </a>
+            </div>
         </div>
-      </div>
     </div>
 
 </div>

@@ -31,8 +31,10 @@ export class AdvanceSearchComponent implements OnInit {
   userDetailsMap: Map<string, any>= new Map();
   //Repositories
   repoList: any[]= new Array<any>();
+  isRepoNotFound:boolean = false;
   //Topics
   topicList: any[]= new Array<any>();
+  isTopicNotFound:boolean = false;
 
   constructor(private advanceDoaService: RestDoaAdvanceService,
               private messageSevice: ComponentCommService,
@@ -102,6 +104,10 @@ export class AdvanceSearchComponent implements OnInit {
 
   getRepositories(topicName: string, page: number){
     this.advanceDoaService.getRepositories(topicName, page).then((res)=>{
+      if(res.data.total_count == 0){
+        this.isRepoNotFound= true;
+        return;
+      }
       if(page == 1){
         this.repoList = res.data.items;
       }else{
@@ -122,6 +128,10 @@ export class AdvanceSearchComponent implements OnInit {
 
   getTopics(search:string, page: number){
     this.advanceDoaService.getTopics(search, page).then((res)=>{
+      if(res.data.total_count == 0){
+        this.isTopicNotFound= true;
+        return;
+      }
       if(page == 1){
         this.topicList = res.data.items;
       }else{
@@ -162,7 +172,9 @@ export class AdvanceSearchComponent implements OnInit {
     console.log("Clearing the previous state ... ");
     this.userList.splice(0);
     this.repoList= new Array<any>();
+    this.isRepoNotFound= false;
     this.topicList= new Array<any>();
+    this.isTopicNotFound= false;
     this.selectedTab = "Users";
     this.result_incrementor = 1;
     this.userDetailsMap.clear();
