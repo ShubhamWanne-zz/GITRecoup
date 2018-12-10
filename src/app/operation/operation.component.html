@@ -225,6 +225,17 @@
             </div>
             <div class="modal-body">
                 <div style="display: block" *ngIf="isShowChart">
+                    <div *ngIf="numberOfChartsArray.length == 0">
+                            <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Chart can not be created !</h4>
+                            <p>Note: Due to heavy data processing, graph may take some time to load.</p>
+                            <hr>
+                            <button class="btn btn-primary" (click)="viewChart()"> 
+                                <i class="fa fa-refresh px-2"></i> Refresh 
+                            </button>
+                            <p class="mb-0">However you can write us query <a href="https://github.com/ShubhamWanne/GitRecoup">here.</a></p>
+                        </div>
+                    </div>
                     <div *ngFor="let index of numberOfChartsArray">
                             <div class="container" style="text-align: center;">
                                     <p class="lead">

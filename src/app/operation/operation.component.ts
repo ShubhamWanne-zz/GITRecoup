@@ -124,7 +124,6 @@ export class OperationComponent implements OnInit {
   }
 
   fetchUser = function (form: any) {
-    this.resetData();
     this.isSearchingStarted = true;
     if (form.value.user && form.value.user != "") {
       this.doaService.getUser(form.value.user.replace(/\s/g,'')).then((res) => {
@@ -143,10 +142,11 @@ export class OperationComponent implements OnInit {
 
         if (this.company == null) this.company = "Personal"
 
-        this.doaService.getRepoDetails(this.userDetails.repos_url).then((res) => {
-          this.repoData = res.data;
-        }, (err) => {
-          console.error(err);
+        this.doaService.getRepoDetails(this.userDetails.repos_url).then((resRepo) => {
+          this.repoData = resRepo.data;
+          console.log(this.repoData);
+        }, (err2) => {
+          console.error(err2);
         });
 
       }, (err) => {
@@ -161,8 +161,8 @@ export class OperationComponent implements OnInit {
     this.doaService.getFollowers(this.userDetails.followers_url).then((res) => {
       this.followers = res.data;
       for (let follower of this.followers) {
-        this.doaService.getUser(follower.login).then((res) => {
-          this.followersDetails.set(follower.login, res.data);
+        this.doaService.getUser(follower.login).then((resUser) => {
+          this.followersDetails.set(follower.login, resUser.data);
         }, (err) => {
           console.error("User not found " + err);
         })
@@ -218,7 +218,9 @@ export class OperationComponent implements OnInit {
     this.isShowChart = true;
     if(!this.isChartCreated)
     {
-      this.isChartCreated = true;
+      if(this.repoData.length == 0) return;
+
+      this.isChartCreated = true;      
       this.repoListWithNonZeroForks = this.repoData.filter((repo)=>{
         return repo.forks_count > 0;
       })
