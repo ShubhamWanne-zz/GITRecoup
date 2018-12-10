@@ -129,6 +129,17 @@
     <div *ngIf="(userList.length != 0 && (userList.length < total_result)) ||
                 (topicList.length != 0 && (topicList.length < total_result)) ||
                 (repoList.length != 0 && (repoList.length < total_result))" class="container" style="padding: 50px; align-content: center">
-        <button mdbBtn type="button" gradient="peach" block="true" mdbWavesEffect (click)="viewMore()">Load more</button>
+        <button mdbBtn type="button" gradient="peach" block="true" mdbWavesEffect (click)="viewMore()">View more {{selectedTab.toLowerCase()}}</button>
     </div>
+
+    <div class="container" *ngIf="(userList.length == total_result) ||
+                                  (topicList.length != total_result) ||
+                                  (repoList.length != total_result)" >
+      <div class="footer-copyright" style="text-align: center; padding-top: 50px; padding-bottom: 20px">
+        <div class="container-fluid">
+            © 2018 Copyright: <a href="https://github.com/ShubhamWanne"> https://github.com/ShubhamWanne </a>
+        </div>
+      </div>
+    </div>
+
 </div>
