@@ -87,7 +87,7 @@
                         <p>
                             <i class="fa fa-briefcase px-2" aria-hidden="true"></i>
                             {{userDetailsMap.get(item.login).company == null ? "Self-Employed" :
-                            userDetailsMap.get(item.login).company}}
+                            getString(userDetailsMap.get(item.login).company)}}
                         </p>
                         <ul class="list-unstyled list-inline font-small">
                             <li class="list-inline-item pr-2 white-text"><i class="fa fa-clock-o pr-1"></i>{{formatDate(userDetailsMap.get(item.login).updated_at

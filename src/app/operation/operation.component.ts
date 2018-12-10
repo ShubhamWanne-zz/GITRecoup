@@ -38,7 +38,7 @@ export class OperationComponent implements OnInit {
   URL: string;
   repository: string;
   company: string;
-  userDetails: any;
+  userDetails: any={};
   repoData: any[];
   followers: any[];
   forksData: any[] = new Array();

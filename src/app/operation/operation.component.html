@@ -55,7 +55,7 @@
                 {{userDetails.html_url}}
             </a>
         </p>
-        <button *ngIf="userDetails.followers > 0" mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
+        <button mdbBtn type="button" color="pink" mdbWavesEffect (click)="basicModal.show(); fetchFollowers()">
             <i class="fa fa-heart mr-1 px-1" aria-hidden="true"></i> followers
         </button>
         <button mdbBtn type="button" color="teal" mdbWavesEffect (click)="chartbasicModal.show(); viewChart()">
@@ -156,7 +156,7 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full-height modal-notify modal-primary" role="document">
-        <div class="modal-content" *ngIf="userDetails != null && userDetails.followers > 0">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
                     <span aria-hidden="true" class="white-text">×</span>
@@ -175,6 +175,14 @@
                             <strong> Followers: </strong>{{userDetails.followers}}
                         </h6>
                     </div>
+                    <div *ngIf="userDetails.followers == 0">
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">You're a lone ranger !</h4>
+                            <p>The function of leadership is to produce more leaders, not more followers</p>
+                            <hr>
+                            <p class="mb-0">However you can write us query <a href="https://github.com/ShubhamWanne/GitRecoup">here.</a></p>
+                        </div>
+                     </div> 
                 <div class="list-group" *ngIf="userDetails != null && userDetails.followers > 0" style="padding-left: 20px;">
                     <a [href]="follower.html_url" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start"
                         *ngFor="let follower of followers">
@@ -226,7 +234,7 @@
             <div class="modal-body">
                 <div style="display: block" *ngIf="isShowChart">
                     <div *ngIf="numberOfChartsArray.length == 0">
-                            <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger" role="alert">
                             <h4 class="alert-heading">Chart can not be created !</h4>
                             <p>Note: Due to heavy data processing, graph may take some time to load.</p>
                             <hr>
