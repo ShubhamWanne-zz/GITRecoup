@@ -69,8 +69,6 @@ export class AdvanceSearchComponent implements OnInit {
     }
     this.repoList.length = 0;
     this.topicList.length = 0;
-    if(this.userList.length != 0)
-      return;
     this.advanceDoaService.getUsers(userName, this.result_incrementor).then((res) => {
       if(res.data.total_count == 0){
         this.isInvalidUser= true;
@@ -169,7 +167,7 @@ export class AdvanceSearchComponent implements OnInit {
   }
 
   clearState(){
-    console.log("Clearing the previous state ... ");
+    //console.log("Clearing the previous state ... ");
     this.userList.splice(0);
     this.repoList= new Array<any>();
     this.isRepoNotFound= false;
@@ -202,7 +200,10 @@ export class AdvanceSearchComponent implements OnInit {
   }
 
   viewMore(){
+    //console.log("Requested to load more "+ this.selectedTab);
+    //console.log(Math.ceil(this.total_result/30));
     if(this.result_incrementor <= Math.ceil(this.total_result/30)){
+      //console.log("Inside if");
       this.result_incrementor++;
       if(this.selectedTab == "Users") this.populateUser(this.userName);
       else if(this.selectedTab == "Repositories") this.getRepositories(this.userName, this.result_incrementor);
